@@ -1,0 +1,1428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CalcTools - Your All-in-One Calculator Solution</title>
+    <!-- 
+      REPLACE THIS with your main Adsterra script from your account.
+    -->
+    <script type='text/javascript' src='//pl123456.puppyperform.com/12/34/56/1234567890abcdef1234567890abcdef.js'></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --secondary: #10b981;
+            --dark: #1f2937;
+            --light: #f9fafb;
+            --gray: #9ca3af;
+            --card-bg: #ffffff;
+            --text: #1f2937;
+            --text-light: #6b7280;
+            --shadow: rgba(0, 0, 0, 0.1);
+            --border: #e5e7eb;
+        }
+
+        .dark-mode {
+            --primary: #3b82f6;
+            --primary-dark: #2563eb;
+            --secondary: #10b981;
+            --dark: #111827;
+            --light: #1f2937;
+            --gray: #6b7280;
+            --card-bg: #374151;
+            --text: #f9fafb;
+            --text-light: #d1d5db;
+            --shadow: rgba(0, 0, 0, 0.25);
+            --border: #4b5563;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            transition: background-color 0.3s, color 0.3s, transform 0.3s, opacity 0.3s;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--light);
+            color: var(--text);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header Styles */
+        header {
+            background-color: var(--card-bg);
+            box-shadow: 0 4px 6px var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: var(--primary);
+        }
+
+        .logo i {
+            font-size: 1.8rem;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 1.5rem;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: var(--text);
+            font-weight: 500;
+            padding: 0.5rem;
+            border-radius: 4px;
+            position: relative;
+        }
+
+        nav a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: 0;
+            left: 0;
+            background-color: var(--primary);
+            transition: width 0.3s ease;
+        }
+
+        nav a:hover::after {
+            width: 100%;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .search-container {
+            position: relative;
+        }
+
+        .search-container input {
+            padding: 0.5rem 1rem 0.5rem 2.5rem;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            background-color: var(--light);
+            color: var(--text);
+            transition: all 0.3s ease;
+        }
+
+        .search-container input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        .search-container i {
+            position: absolute;
+            left: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gray);
+        }
+
+        .theme-toggle {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--text);
+            font-size: 1.2rem;
+            transition: transform 0.3s ease;
+        }
+
+        .theme-toggle:hover {
+            transform: rotate(30deg);
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 3rem 0;
+            text-align: center;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            border-radius: 0 0 10px 10px;
+            margin-bottom: 2rem;
+            animation: fadeIn 1s ease;
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            animation: slideInFromTop 0.8s ease;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin: 0 auto 1.5rem;
+            animation: slideInFromBottom 0.8s ease;
+        }
+
+        .search-calculators {
+            max-width: 500px;
+            margin: 0 auto;
+            position: relative;
+            animation: fadeIn 1.2s ease;
+        }
+
+        .search-calculators input {
+            width: 100%;
+            padding: 1rem 1rem 1rem 3rem;
+            border: none;
+            border-radius: 50px;
+            font-size: 1rem;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .search-calculators input:focus {
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .search-calculators i {
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gray);
+        }
+
+        /* Ad Container */
+        .ad-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 1.5rem 0;
+            padding: 10px;
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            box-shadow: 0 2px 4px var(--shadow);
+            animation: fadeIn 1s ease;
+            min-height: 90px; /* Default height for horizontal */
+        }
+
+        .ad-container.horizontal {
+            width: 100%;
+            min-height: 90px;
+        }
+
+        .ad-container.vertical {
+            width: 300px;
+            min-height: 250px; /* Or 600px, adjust as needed */
+            margin: 0 auto;
+        }
+
+        .ad-label {
+            text-align: center;
+            font-size: 0.8rem;
+            color: var(--text-light);
+            margin: 1rem 0 5px 0;
+        }
+
+
+        /* Categories Section */
+        .section-title {
+            text-align: center;
+            margin-bottom: 2rem;
+            color: var(--text);
+            position: relative;
+            padding-bottom: 10px;
+            animation: fadeIn 1s ease;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 3px;
+            background-color: var(--primary);
+            border-radius: 3px;
+        }
+
+        .categories {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-bottom: 3rem;
+            animation: fadeIn 1.2s ease;
+        }
+
+        .category-btn {
+            padding: 0.7rem 1.5rem;
+            background-color: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .category-btn.active, .category-btn:hover {
+            background-color: var(--primary);
+            color: white;
+            border-color: var(--primary);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px var(--shadow);
+        }
+
+        /* Calculators Grid */
+        .calculators-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .calculator-card {
+            background-color: var(--card-bg);
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px var(--shadow);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            animation: fadeInUp 0.6s ease;
+            animation-fill-mode: both;
+            display: flex; /* Added for better internal alignment */
+            flex-direction: column; /* Added */
+        }
+
+        .calculator-card:nth-child(1) { animation-delay: 0.1s; }
+        .calculator-card:nth-child(2) { animation-delay: 0.2s; }
+        .calculator-card:nth-child(3) { animation-delay: 0.3s; }
+        .calculator-card:nth-child(4) { animation-delay: 0.4s; }
+        .calculator-card:nth-child(5) { animation-delay: 0.5s; }
+        .calculator-card:nth-child(6) { animation-delay: 0.6s; }
+
+        .calculator-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px var(--shadow);
+        }
+
+        .calculator-icon {
+            background-color: var(--primary);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+            flex-shrink: 0; /* Prevent icon from shrinking */
+        }
+
+        .calculator-card:hover .calculator-icon {
+            transform: rotate(10deg) scale(1.1);
+        }
+
+        .calculator-card h3 {
+            margin-bottom: 0.5rem;
+            color: var(--text);
+        }
+
+        .calculator-card p {
+            color: var(--text-light);
+            font-size: 0.9rem;
+            flex-grow: 1; /* Make description take remaining space */
+        }
+
+        /* Calculator Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            overflow-y: auto;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal-content {
+            background-color: var(--card-bg);
+            margin: 2rem auto;
+            padding: 2rem;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 600px;
+            position: relative;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            animation: slideInFromBottom 0.4s ease;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-light);
+            transition: color 0.3s ease;
+        }
+
+        .close-modal:hover {
+            color: var(--primary);
+        }
+
+        .calculator-form {
+            margin-top: 1.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--text);
+        }
+
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            background-color: var(--light);
+            color: var(--text);
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus, .form-group select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .btn:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px var(--shadow);
+        }
+
+        .btn-secondary {
+            background-color: var(--gray);
+        }
+
+        .btn-secondary:hover {
+            background-color: #7c7c7c;
+        }
+
+        .results {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background-color: var(--light);
+            border-radius: 8px;
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .results h3 {
+            margin-bottom: 1rem;
+            color: var(--text);
+        }
+
+        .result-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid var(--border);
+            transition: all 0.3s ease;
+            flex-wrap: wrap; /* Added for smaller screens */
+        }
+
+        .result-item:hover {
+            background-color: rgba(37, 99, 235, 0.05);
+            padding-left: 10px;
+        }
+
+        .result-item:last-child {
+            border-bottom: none;
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--card-bg);
+            padding: 3rem 0;
+            margin-top: 3rem;
+            border-top: 1px solid var(--border);
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .footer-section h3 {
+            margin-bottom: 1rem;
+            color: var(--text);
+        }
+
+        .footer-section p, .footer-section a {
+            color: var(--text-light);
+            margin-bottom: 0.5rem;
+            display: block;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-section a:hover {
+            color: var(--primary);
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .social-links a {
+            font-size: 1.2rem;
+        }
+
+        .copyright {
+            text-align: center;
+            margin-top: 3rem;
+            color: var(--text-light);
+            padding-top: 1rem;
+            border-top: 1px solid var(--border);
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideInFromTop {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideInFromBottom {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Custom Modal Alert */
+        .custom-alert {
+            display: none;
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: var(--dark);
+            color: var(--light);
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px var(--shadow);
+            z-index: 2000;
+            animation: slideInFromTop 0.4s ease;
+        }
+
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            nav ul {
+                gap: 0.7rem;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .hero h1 {
+                font-size: 2rem;
+            }
+            
+            .calculators-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .modal-content {
+                width: 95%;
+                margin: 1rem auto; /* Adjusted margin */
+                padding: 1.5rem;
+            }
+            
+            .ad-container.vertical {
+                /* No special rules needed, will stack */
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-calculator"></i>
+                    <span>CalcTools</span>
+                </div>
+                
+                <nav>
+                    <ul>
+                        <li><a href="#" class="active">Home</a></li>
+                        <li><a href="#">All Calculators</a></li>
+                        <li><a href="#">Features</a></li>
+                        <li><a href="#">About</a></li>
+                    </ul>
+                </nav>
+                
+                <div class="header-actions">
+                    <div class="search-container">
+                        <i class="fas fa-search"></i>
+                        <input type="text" placeholder="Search calculators..." id="searchInput">
+                    </div>
+                    <button class="theme-toggle" id="themeToggle">
+                        <i class="fas fa-moon"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <h1>All The Calculators You Need In One Place</h1>
+            <p>Free, easy-to-use financial, mathematical and utility calculators for everyday use</p>
+            
+            <div class="search-calculators">
+                <i class="fas fa-search"></i>
+                <input type="text" placeholder="Search for a calculator..." id="heroSearch">
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <main class="container">
+        <!-- Top Ad Banner -->
+        <div class="ad-label">Advertisement</div>
+        <div class="ad-container horizontal">
+            <!-- 
+              PLACE your Adsterra 728x90 or other horizontal ad unit code here.
+            -->
+        </div>
+
+        <!-- Categories -->
+        <h2 class="section-title">Calculator Categories</h2>
+        <div class="categories">
+            <button class="category-btn active" data-category="all">
+                <i class="fas fa-th"></i> All Calculators
+            </button>
+            <button class="category-btn" data-category="financial">
+                <i class="fas fa-dollar-sign"></i> Financial
+            </button>
+            <button class="category-btn" data-category="mathematical">
+                <i class="fas fa-calculator"></i> Mathematical
+            </button>
+            <button class="category-btn" data-category="utility">
+                <i class="fas fa-tools"></i> Utility
+            </button>
+        </div>
+
+        <!-- Calculators Grid -->
+        <h2 class="section-title">Popular Calculators</h2>
+        <div class="calculators-grid">
+            <!-- GST Calculator -->
+            <div class="calculator-card" data-category="financial" data-calc="gst">
+                <div class="calculator-icon">
+                    <i class="fas fa-receipt"></i>
+                </div>
+                <h3>GST Calculator</h3>
+                <p>Calculate GST amount and total price with different tax rates</p>
+            </div>
+
+            <!-- Profit & Loss Calculator -->
+            <div class="calculator-card" data-category="financial" data-calc="pnl">
+                <div class="calculator-icon">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <h3>Profit & Loss Calculator</h3>
+                <p>Calculate profit or loss percentage and amount</p>
+            </div>
+
+            <!-- Side Ad - REMOVED -->
+
+            <!-- EMI Calculator -->
+            <div class="calculator-card" data-category="financial" data-calc="emi">
+                <div class="calculator-icon">
+                    <i class="fas fa-credit-card"></i>
+                </div>
+                <h3>EMI Calculator</h3>
+                <p>Calculate your Equated Monthly Installment for loans</p>
+            </div>
+
+            <!-- Percentage Calculator -->
+            <div class="calculator-card" data-category="mathematical" data-calc="percentage">
+                <div class="calculator-icon">
+                    <i class="fas fa-percent"></i>
+                </div>
+                <h3>Percentage Calculator</h3>
+                <p>Calculate percentages, increases, and decreases</p>
+            </div>
+
+            <!-- Age Calculator -->
+            <div class="calculator-card" data-category="mathematical" data-calc="age">
+                <div class="calculator-icon">
+                    <i class="fas fa-birthday-cake"></i>
+                </div>
+                <h3>Age Calculator</h3>
+                <p>Calculate exact age in years, months, and days</p>
+            </div>
+
+            <!-- BMI Calculator -->
+            <div class="calculator-card" data-category="utility" data-calc="bmi">
+                <div class="calculator-icon">
+                    <i class="fas fa-weight"></i>
+                </div>
+                <h3>BMI Calculator</h3>
+                <p>Calculate your Body Mass Index and health category</p>
+            </div>
+        </div>
+
+        <!-- Bottom Ad Banner -->
+        <div class="ad-label">Advertisement</div>
+        <div class="ad-container horizontal">
+            <!-- 
+              PLACE your Adsterra 728x90 or other horizontal ad unit code here.
+            -->
+        </div>
+    </main>
+
+    <!-- Custom Alert Box -->
+    <div id="customAlert" class="custom-alert">
+        <span id="customAlertMessage"></span>
+    </div>
+
+    <!-- Calculator Modals -->
+    <!-- GST Calculator Modal -->
+    <div class="modal" id="gstModal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2>GST Calculator</h2>
+            <p>Calculate GST amount and total price</p>
+            
+            <div class="calculator-form">
+                <div class="form-group">
+                    <label for="gstAmount">Original Amount</label>
+                    <input type="number" id="gstAmount" placeholder="Enter amount">
+                </div>
+                
+                <div class="form-group">
+                    <label for="gstRate">GST Rate</label>
+                    <select id="gstRate">
+                        <option value="5">5%</option>
+                        <option value="12">12%</option>
+                        <option value="18" selected>18%</option>
+                        <option value="28">28%</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="gstType">Calculation Type</label>
+                    <select id="gstType">
+                        <option value="exclude">Exclude GST</option>
+                        <option value="include">Include GST</option>
+                    </select>
+                </div>
+                
+                <button class="btn" id="calculateGst">
+                    <i class="fas fa-calculator"></i> Calculate
+                </button>
+                
+                <div class="results" id="gstResults">
+                    <h3>Results</h3>
+                    <div class="result-item">
+                        <span>Original Amount:</span>
+                        <span id="originalAmountResult">₹0.00</span>
+                    </div>
+                    <div class="result-item">
+                        <span>GST Amount:</span>
+                        <span id="gstAmountResult">₹0.00</span>
+                    </div>
+                    <div class="result-item">
+                        <span>Total Amount:</span>
+                        <span id="totalAmountResult">₹0.00</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Profit & Loss Calculator Modal -->
+    <div class="modal" id="pnlModal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2>Profit & Loss Calculator</h2>
+            <p>Calculate profit or loss percentage and amount</p>
+            
+            <div class="calculator-form">
+                <div class="form-group">
+                    <label for="costPrice">Cost Price (₹)</label>
+                    <input type="number" id="costPrice" placeholder="Enter cost price">
+                </div>
+                
+                <div class="form-group">
+                    <label for="sellingPrice">Selling Price (₹)</label>
+                    <input type="number" id="sellingPrice" placeholder="Enter selling price">
+                </div>
+                
+                <button class="btn" id="calculatePnl">
+                    <i class="fas fa-calculator"></i> Calculate
+                </button>
+                
+                <div class="results" id="pnlResults">
+                    <h3>Results</h3>
+                    <div class="result-item">
+                        <span>Profit/Loss Amount:</span>
+                        <span id="profitLossAmount">₹0.00</span>
+                    </div>
+                    <div class="result-item">
+                        <span>Profit/Loss Percentage:</span>
+                        <span id="profitLossPercent">0%</span>
+                    </div>
+                    <div class="result-item">
+                        <span>Status:</span>
+                        <span id="profitLossStatus">No Change</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- EMI Calculator Modal -->
+    <div class="modal" id="emiModal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2>EMI Calculator</h2>
+            <p>Calculate your Equated Monthly Installment for loans</p>
+            
+            <div class="calculator-form">
+                <div class="form-group">
+                    <label for="loanAmount">Loan Amount (₹)</label>
+                    <input type="number" id="loanAmount" placeholder="Enter loan amount">
+                </div>
+                
+                <div class="form-group">
+                    <label for="interestRate">Interest Rate (% per year)</label>
+                    <input type="number" id="interestRate" placeholder="Enter interest rate" step="0.1">
+                </div>
+                
+                <div class="form-group">
+                    <label for="loanTenure">Loan Tenure (months)</label>
+                    <input type="number" id="loanTenure" placeholder="Enter loan tenure">
+                </div>
+                
+                <button class="btn" id="calculateEmi">
+                    <i class="fas fa-calculator"></i> Calculate
+                </button>
+                
+                <div class="results" id="emiResults">
+                    <h3>Results</h3>
+                    <div class="result-item">
+                        <span>Monthly EMI:</span>
+                        <span id="monthlyEmi">₹0.00</span>
+                    </div>
+                    <div class="result-item">
+                        <span>Total Interest Payable:</span>
+                        <span id="totalInterest">₹0.00</span>
+                    </div>
+                    <div class="result-item">
+                        <span>Total Payment:</span>
+                        <span id="totalPayment">₹0.00</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Percentage Calculator Modal -->
+    <div class="modal" id="percentageModal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2>Percentage Calculator</h2>
+            <p>Calculate percentages, increases, and decreases</p>
+            
+            <div class="calculator-form">
+                <div class="form-group">
+                    <label for="percentageType">Calculation Type</label>
+                    <select id="percentageType">
+                        <option value="percentOf">What is X% of Y?</option>
+                        <option value="percentWhat">X is what % of Y?</option>
+                        <option value="percentIncrease">Percentage Increase</option>
+                        <option value="percentDecrease">Percentage Decrease</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="valueX">Value X</label>
+                    <input type="number" id="valueX" placeholder="Enter value">
+                </div>
+                
+                <div class="form-group">
+                    <label for="valueY">Value Y</label>
+                    <input type="number" id="valueY" placeholder="Enter value">
+                </div>
+                
+                <button class="btn" id="calculatePercentage">
+                    <i class="fas fa-calculator"></i> Calculate
+                </button>
+                
+                <div class="results" id="percentageResults">
+                    <h3>Results</h3>
+                    <div class="result-item">
+                        <span>Result:</span>
+                        <span id="percentageResult">0</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Age Calculator Modal -->
+    <div class="modal" id="ageModal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2>Age Calculator</h2>
+            <p>Calculate exact age in years, months, and days</p>
+            
+            <div class="calculator-form">
+                <div class="form-group">
+                    <label for="birthDate">Birth Date</label>
+                    <input type="date" id="birthDate">
+                </div>
+                
+                <div class="form-group">
+                    <label for="asOfDate">As of Date (optional)</label>
+                    <input type="date" id="asOfDate">
+                </div>
+                
+                <button class="btn" id="calculateAge">
+                    <i class="fas fa-calculator"></i> Calculate Age
+                </button>
+                
+                <div class="results" id="ageResults">
+                    <h3>Results</h3>
+                    <div class="result-item">
+                        <span>Age:</span>
+                        <span id="ageResult">0 years, 0 months, 0 days</span>
+                    </div>
+                    <div class="result-item">
+                        <span>Next Birthday:</span>
+                        <span id="nextBirthday">0 days away</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- BMI Calculator Modal -->
+    <div class="modal" id="bmiModal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2>BMI Calculator</h2>
+            <p>Calculate your Body Mass Index and health category</p>
+            
+            <div class="calculator-form">
+                <div class="form-group">
+                    <label for="height">Height (cm)</label>
+                    <input type="number" id="height" placeholder="Enter height in cm">
+                </div>
+                
+                <div class="form-group">
+                    <label for="weight">Weight (kg)</label>
+                    <input type="number" id="weight" placeholder="Enter weight in kg">
+                </div>
+                
+                <button class="btn" id="calculateBmi">
+                    <i class="fas fa-calculator"></i> Calculate BMI
+                </button>
+                
+                <div class="results" id="bmiResults">
+                    <h3>Results</h3>
+                    <div class="result-item">
+                        <span>BMI:</span>
+                        <span id="bmiValue">0</span>
+                    </div>
+                    <div class="result-item">
+                        <span>Category:</span>
+                        <span id="bmiCategory">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span>Healthy BMI Range:</span>
+                        <span>18.5 - 24.9</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>CalcTools</h3>
+                    <p>Your all-in-one solution for everyday calculations. Fast, free, and accurate.</p>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <a href="#">Home</a>
+                    <a href="#">All Calculators</a>
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Terms of Service</a>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Follow Us</h3>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                <p>&copy; 2023 CalcTools. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Custom Alert Function
+        const customAlert = (message) => {
+            const alertBox = document.getElementById('customAlert');
+            const alertMessage = document.getElementById('customAlertMessage');
+            
+            alertMessage.textContent = message;
+            alertBox.style.display = 'block';
+            
+            setTimeout(() => {
+                alertBox.style.display = 'none';
+            }, 3000);
+        };
+
+        // Theme Toggle
+        const themeToggle = document.getElementById('themeToggle');
+        const themeIcon = themeToggle.querySelector('i');
+        
+        themeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('dark-mode');
+            if (document.body.classList.contains('dark-mode')) {
+                themeIcon.classList.remove('fa-moon');
+                themeIcon.classList.add('fa-sun');
+                localStorage.setItem('theme', 'dark');
+            } else {
+                themeIcon.classList.remove('fa-sun');
+                themeIcon.classList.add('fa-moon');
+                localStorage.setItem('theme', 'light');
+            }
+        });
+
+        // Check for saved theme preference
+        if (localStorage.getItem('theme') === 'dark') {
+            document.body.classList.add('dark-mode');
+            themeIcon.classList.remove('fa-moon');
+            themeIcon.classList.add('fa-sun');
+        }
+
+        // Calculator Cards - Open Modal
+        const calculatorCards = document.querySelectorAll('.calculator-card');
+        const modals = document.querySelectorAll('.modal');
+        const closeButtons = document.querySelectorAll('.close-modal');
+        
+        calculatorCards.forEach(card => {
+            card.addEventListener('click', () => {
+                const calcType = card.getAttribute('data-calc');
+                if (calcType) { // Ensure it's a calculator card and not an ad
+                    const modal = document.getElementById(`${calcType}Modal`);
+                    if (modal) {
+                        modal.style.display = 'block';
+                        document.body.style.overflow = 'hidden';
+                    }
+                }
+            });
+        });
+        
+        closeButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                button.closest('.modal').style.display = 'none';
+                document.body.style.overflow = 'auto';
+            });
+        });
+        
+        window.addEventListener('click', (event) => {
+            modals.forEach(modal => {
+                if (event.target === modal) {
+                    modal.style.display = 'none';
+                    document.body.style.overflow = 'auto';
+                }
+            });
+        });
+
+        // GST Calculator Logic
+        const calculateGst = document.getElementById('calculateGst');
+        if (calculateGst) {
+            calculateGst.addEventListener('click', () => {
+                const amount = parseFloat(document.getElementById('gstAmount').value);
+                const rate = parseFloat(document.getElementById('gstRate').value);
+                const type = document.getElementById('gstType').value;
+                
+                if (isNaN(amount) || amount <= 0) {
+                    customAlert('Please enter a valid amount');
+                    return;
+                }
+                
+                let originalAmount, gstAmount, totalAmount;
+                
+                if (type === 'exclude') {
+                    originalAmount = amount;
+                    gstAmount = (amount * rate) / 100;
+                    totalAmount = originalAmount + gstAmount;
+                } else {
+                    totalAmount = amount;
+                    originalAmount = (amount * 100) / (100 + rate);
+                    gstAmount = totalAmount - originalAmount;
+                }
+                
+                document.getElementById('originalAmountResult').textContent = `₹${originalAmount.toFixed(2)}`;
+                document.getElementById('gstAmountResult').textContent = `₹${gstAmount.toFixed(2)}`;
+                document.getElementById('totalAmountResult').textContent = `₹${totalAmount.toFixed(2)}`;
+                document.getElementById('gstResults').style.display = 'block';
+            });
+        }
+
+        // Profit & Loss Calculator Logic
+        const calculatePnl = document.getElementById('calculatePnl');
+        if (calculatePnl) {
+            calculatePnl.addEventListener('click', () => {
+                const costPrice = parseFloat(document.getElementById('costPrice').value);
+                const sellingPrice = parseFloat(document.getElementById('sellingPrice').value);
+                
+                if (isNaN(costPrice) || isNaN(sellingPrice) || costPrice < 0 || sellingPrice < 0) {
+                    customAlert('Please enter valid positive numbers');
+                    return;
+                }
+                
+                const profitLossAmount = sellingPrice - costPrice;
+                const profitLossPercent = (Math.abs(profitLossAmount) / costPrice) * 100;
+                
+                let status;
+                if (profitLossAmount > 0) {
+                    status = 'Profit';
+                } else if (profitLossAmount < 0) {
+                    status = 'Loss';
+                } else {
+                    status = 'No Change';
+                }
+                
+                document.getElementById('profitLossAmount').textContent = `₹${Math.abs(profitLossAmount).toFixed(2)}`;
+                document.getElementById('profitLossPercent').textContent = `${(costPrice === 0 ? 0 : profitLossPercent).toFixed(2)}%`;
+                document.getElementById('profitLossStatus').textContent = status;
+                document.getElementById('pnlResults').style.display = 'block';
+            });
+        }
+
+        // EMI Calculator Logic
+        const calculateEmi = document.getElementById('calculateEmi');
+        if (calculateEmi) {
+            calculateEmi.addEventListener('click', () => {
+                const loanAmount = parseFloat(document.getElementById('loanAmount').value);
+                const interestRate = parseFloat(document.getElementById('interestRate').value);
+                const loanTenure = parseFloat(document.getElementById('loanTenure').value);
+                
+                if (isNaN(loanAmount) || loanAmount <= 0 || isNaN(interestRate) || interestRate <= 0 || isNaN(loanTenure) || loanTenure <= 0) {
+                    customAlert('Please enter valid positive numbers');
+                    return;
+                }
+                
+                const monthlyInterest = interestRate / 12 / 100;
+                const emi = loanAmount * monthlyInterest * Math.pow(1 + monthlyInterest, loanTenure) / (Math.pow(1 + monthlyInterest, loanTenure) - 1);
+                const totalPayment = emi * loanTenure;
+                const totalInterest = totalPayment - loanAmount;
+                
+                document.getElementById('monthlyEmi').textContent = `₹${emi.toFixed(2)}`;
+                document.getElementById('totalInterest').textContent = `₹${totalInterest.toFixed(2)}`;
+                document.getElementById('totalPayment').textContent = `₹${totalPayment.toFixed(2)}`;
+                document.getElementById('emiResults').style.display = 'block';
+            });
+        }
+
+        // Percentage Calculator Logic
+        const calculatePercentage = document.getElementById('calculatePercentage');
+        if (calculatePercentage) {
+            calculatePercentage.addEventListener('click', () => {
+                const type = document.getElementById('percentageType').value;
+                const valueX = parseFloat(document.getElementById('valueX').value);
+                const valueY = parseFloat(document.getElementById('valueY').value);
+                
+                if (isNaN(valueX) || isNaN(valueY)) {
+                    customAlert('Please enter valid numbers');
+                    return;
+                }
+                
+                let result;
+                switch(type) {
+                    case 'percentOf':
+                        result = (valueX * valueY) / 100;
+                        break;
+                    case 'percentWhat':
+                        if (valueY === 0) {
+                            customAlert("Cannot divide by zero (Value Y)");
+                            return;
+                        }
+                        result = (valueX / valueY) * 100;
+                        break;
+                    case 'percentIncrease':
+                        if (valueX === 0) {
+                             customAlert("Cannot calculate increase from zero (Value X)");
+                            return;
+                        }
+                        result = ((valueY - valueX) / valueX) * 100;
+                        break;
+                    case 'percentDecrease':
+                         if (valueX === 0) {
+                             customAlert("Cannot calculate decrease from zero (Value X)");
+                            return;
+                        }
+                        result = ((valueX - valueY) / valueX) * 100;
+                        break;
+                }
+                
+                document.getElementById('percentageResult').textContent = result.toFixed(2) + (type === 'percentWhat' || type === 'percentIncrease' || type === 'percentDecrease' ? '%' : '');
+                document.getElementById('percentageResults').style.display = 'block';
+            });
+        }
+
+        // Age Calculator Logic
+        const calculateAge = document.getElementById('calculateAge');
+        if (calculateAge) {
+            calculateAge.addEventListener('click', () => {
+                const birthDateStr = document.getElementById('birthDate').value;
+                if (!birthDateStr) {
+                    customAlert('Please enter a valid birth date');
+                    return;
+                }
+                const birthDate = new Date(birthDateStr);
+                const asOfDateStr = document.getElementById('asOfDate').value;
+                const asOfDate = asOfDateStr ? new Date(asOfDateStr) : new Date();
+                
+                if (isNaN(birthDate.getTime())) {
+                    customAlert('Please enter a valid birth date');
+                    return;
+                }
+
+                if (birthDate > asOfDate) {
+                    customAlert('Birth date cannot be in the future');
+                    return;
+                }
+                
+                let years = asOfDate.getFullYear() - birthDate.getFullYear();
+                let months = asOfDate.getMonth() - birthDate.getMonth();
+                let days = asOfDate.getDate() - birthDate.getDate();
+                
+                if (days < 0) {
+                    months--;
+                    const prevMonthLastDay = new Date(asOfDate.getFullYear(), asOfDate.getMonth(), 0).getDate();
+                    days += prevMonthLastDay;
+                }
+                
+                if (months < 0) {
+                    years--;
+                    months += 12;
+                }
+                
+                // Calculate next birthday
+                let nextBirthday = new Date(asOfDate.getFullYear(), birthDate.getMonth(), birthDate.getDate());
+                if (nextBirthday < asOfDate) {
+                    nextBirthday.setFullYear(nextBirthday.getFullYear() + 1);
+                }
+                const timeDiff = nextBirthday.getTime() - asOfDate.getTime();
+                const daysUntilBirthday = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
+                
+                document.getElementById('ageResult').textContent = `${years} years, ${months} months, ${days} days`;
+                document.getElementById('nextBirthday').textContent = `${daysUntilBirthday} days away`;
+                document.getElementById('ageResults').style.display = 'block';
+            });
+        }
+
+        // BMI Calculator Logic
+        const calculateBmi = document.getElementById('calculateBmi');
+        if (calculateBmi) {
+            calculateBmi.addEventListener('click', () => {
+                const height = parseFloat(document.getElementById('height').value);
+                const weight = parseFloat(document.getElementById('weight').value);
+                
+                if (isNaN(height) || height <= 0 || isNaN(weight) || weight <= 0) {
+                    customAlert('Please enter valid positive numbers for height and weight');
+                    return;
+                }
+                
+                const heightInMeter = height / 100;
+                const bmi = weight / (heightInMeter * heightInMeter);
+                
+                let category;
+                if (bmi < 18.5) {
+                    category = 'Underweight';
+                } else if (bmi < 25) {
+                    category = 'Normal weight';
+                } else if (bmi < 30) {
+                    category = 'Overweight';
+                } else {
+                    category = 'Obesity';
+                }
+                
+                document.getElementById('bmiValue').textContent = bmi.toFixed(1);
+                document.getElementById('bmiCategory').textContent = category;
+                document.getElementById('bmiResults').style.display = 'block';
+            });
+        }
+
+        // Category Filtering
+        const categoryButtons = document.querySelectorAll('.category-btn');
+        const allCalculatorItems = document.querySelectorAll('.calculators-grid > .calculator-card'); // Select only cards
+        
+        categoryButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const category = button.getAttribute('data-category');
+                
+                // Update active button
+                categoryButtons.forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+                
+                // Filter calculators
+                allCalculatorItems.forEach(item => {
+                    const itemCategory = item.getAttribute('data-category');
+
+                    if (category === 'all' || itemCategory === category) {
+                        item.style.display = 'flex'; // Show matching cards
+                    } else {
+                        item.style.display = 'none'; // Hide non-matching cards
+                    }
+                });
+            });
+        });
+
+        // Search Functionality
+        const searchInputs = [document.getElementById('searchInput'), document.getElementById('heroSearch')];
+        
+        searchInputs.forEach(input => {
+            input.addEventListener('input', (e) => {
+                const searchTerm = e.target.value.toLowerCase();
+                
+                // Sync both search bars
+                searchInputs.forEach(si => si.value = e.target.value);
+
+                allCalculatorItems.forEach(item => {
+                    const title = item.querySelector('h3')?.textContent.toLowerCase() || '';
+                    const description = item.querySelector('p')?.textContent.toLowerCase() || '';
+                    
+                    if (title.includes(searchTerm) || description.includes(searchTerm)) {
+                        item.style.display = 'flex';
+                    } else {
+                        item.style.display = 'none';
+                    }
+                });
+                
+                // Reset category filter when searching
+                categoryButtons.forEach(btn => btn.classList.remove('active'));
+                document.querySelector('.category-btn[data-category="all"]').classList.add('active');
+            });
+        });
+
+        // Adsterra scripts typically initialize themselves.
+    </script>
+</body>
+</html>
+
