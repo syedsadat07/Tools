@@ -4,8 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CalcTools - Your All-in-One Calculator Solution</title>
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7317809113372587"
-     crossorigin="anonymous"></script>
+    <!-- 
+      REPLACE THIS with your main Adsterra script from your account.
+    -->
+    <script type='text/javascript' src='//pl123456.puppyperform.com/12/34/56/1234567890abcdef1234567890abcdef.js'></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
@@ -221,22 +223,24 @@
         .ad-container {
             display: flex;
             justify-content: center;
+            align-items: center;
             margin: 1.5rem 0;
             padding: 10px;
             background-color: var(--card-bg);
             border-radius: 8px;
             box-shadow: 0 2px 4px var(--shadow);
             animation: fadeIn 1s ease;
+            min-height: 90px; /* Default height for horizontal */
         }
 
         .ad-container.horizontal {
             width: 100%;
-            height: 90px;
+            min-height: 90px;
         }
 
         .ad-container.vertical {
             width: 300px;
-            height: 600px;
+            min-height: 250px; /* Or 600px, adjust as needed */
             margin: 0 auto;
         }
 
@@ -244,8 +248,9 @@
             text-align: center;
             font-size: 0.8rem;
             color: var(--text-light);
-            margin-bottom: 5px;
+            margin: 1rem 0 5px 0;
         }
+
 
         /* Categories Section */
         .section-title {
@@ -316,6 +321,8 @@
             cursor: pointer;
             animation: fadeInUp 0.6s ease;
             animation-fill-mode: both;
+            display: flex; /* Added for better internal alignment */
+            flex-direction: column; /* Added */
         }
 
         .calculator-card:nth-child(1) { animation-delay: 0.1s; }
@@ -342,6 +349,7 @@
             margin-bottom: 1rem;
             font-size: 1.2rem;
             transition: all 0.3s ease;
+            flex-shrink: 0; /* Prevent icon from shrinking */
         }
 
         .calculator-card:hover .calculator-icon {
@@ -356,6 +364,7 @@
         .calculator-card p {
             color: var(--text-light);
             font-size: 0.9rem;
+            flex-grow: 1; /* Make description take remaining space */
         }
 
         /* Calculator Modal */
@@ -478,6 +487,7 @@
             padding: 0.5rem 0;
             border-bottom: 1px solid var(--border);
             transition: all 0.3s ease;
+            flex-wrap: wrap; /* Added for smaller screens */
         }
 
         .result-item:hover {
@@ -577,6 +587,23 @@
             }
         }
 
+        /* Custom Modal Alert */
+        .custom-alert {
+            display: none;
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: var(--dark);
+            color: var(--light);
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px var(--shadow);
+            z-index: 2000;
+            animation: slideInFromTop 0.4s ease;
+        }
+
+
         /* Responsive Design */
         @media (max-width: 768px) {
             .header-content {
@@ -600,12 +627,12 @@
             
             .modal-content {
                 width: 95%;
+                margin: 1rem auto; /* Adjusted margin */
                 padding: 1.5rem;
             }
             
             .ad-container.vertical {
-                width: 250px;
-                height: 500px;
+                /* No special rules needed, will stack */
             }
         }
     </style>
@@ -660,13 +687,9 @@
         <!-- Top Ad Banner -->
         <div class="ad-label">Advertisement</div>
         <div class="ad-container horizontal">
-            <!-- AdSense Horizontal Ad -->
-            <ins class="adsbygoogle"
-                 style="display:block"
-                 data-ad-client="ca-pub-7317809113372587"
-                 data-ad-slot="1234567890"
-                 data-ad-format="auto"
-                 data-full-width-responsive="true"></ins>
+            <!-- 
+              PLACE your Adsterra 728x90 or other horizontal ad unit code here.
+            -->
         </div>
 
         <!-- Categories -->
@@ -707,16 +730,7 @@
                 <p>Calculate profit or loss percentage and amount</p>
             </div>
 
-            <!-- Side Ad -->
-            <div class="ad-container vertical">
-                <!-- AdSense Vertical Ad -->
-                <ins class="adsbygoogle"
-                     style="display:block"
-                     data-ad-client="ca-pub-7317809113372587"
-                     data-ad-slot="0987654321"
-                     data-ad-format="auto"
-                     data-full-width-responsive="true"></ins>
-            </div>
+            <!-- Side Ad - REMOVED -->
 
             <!-- EMI Calculator -->
             <div class="calculator-card" data-category="financial" data-calc="emi">
@@ -758,15 +772,16 @@
         <!-- Bottom Ad Banner -->
         <div class="ad-label">Advertisement</div>
         <div class="ad-container horizontal">
-            <!-- AdSense Horizontal Ad -->
-            <ins class="adsbygoogle"
-                 style="display:block"
-                 data-ad-client="ca-pub-7317809113372587"
-                 data-ad-slot="2345678901"
-                 data-ad-format="auto"
-                 data-full-width-responsive="true"></ins>
+            <!-- 
+              PLACE your Adsterra 728x90 or other horizontal ad unit code here.
+            -->
         </div>
     </main>
+
+    <!-- Custom Alert Box -->
+    <div id="customAlert" class="custom-alert">
+        <span id="customAlertMessage"></span>
+    </div>
 
     <!-- Calculator Modals -->
     <!-- GST Calculator Modal -->
@@ -1065,6 +1080,19 @@
     </footer>
 
     <script>
+        // Custom Alert Function
+        const customAlert = (message) => {
+            const alertBox = document.getElementById('customAlert');
+            const alertMessage = document.getElementById('customAlertMessage');
+            
+            alertMessage.textContent = message;
+            alertBox.style.display = 'block';
+            
+            setTimeout(() => {
+                alertBox.style.display = 'none';
+            }, 3000);
+        };
+
         // Theme Toggle
         const themeToggle = document.getElementById('themeToggle');
         const themeIcon = themeToggle.querySelector('i');
@@ -1097,20 +1125,20 @@
         calculatorCards.forEach(card => {
             card.addEventListener('click', () => {
                 const calcType = card.getAttribute('data-calc');
-                const modal = document.getElementById(`${calcType}Modal`);
-                if (modal) {
-                    modal.style.display = 'block';
-                    document.body.style.overflow = 'hidden';
+                if (calcType) { // Ensure it's a calculator card and not an ad
+                    const modal = document.getElementById(`${calcType}Modal`);
+                    if (modal) {
+                        modal.style.display = 'block';
+                        document.body.style.overflow = 'hidden';
+                    }
                 }
             });
         });
         
         closeButtons.forEach(button => {
             button.addEventListener('click', () => {
-                modals.forEach(modal => {
-                    modal.style.display = 'none';
-                    document.body.style.overflow = 'auto';
-                });
+                button.closest('.modal').style.display = 'none';
+                document.body.style.overflow = 'auto';
             });
         });
         
@@ -1131,8 +1159,8 @@
                 const rate = parseFloat(document.getElementById('gstRate').value);
                 const type = document.getElementById('gstType').value;
                 
-                if (isNaN(amount)) {
-                    alert('Please enter a valid amount');
+                if (isNaN(amount) || amount <= 0) {
+                    customAlert('Please enter a valid amount');
                     return;
                 }
                 
@@ -1162,8 +1190,8 @@
                 const costPrice = parseFloat(document.getElementById('costPrice').value);
                 const sellingPrice = parseFloat(document.getElementById('sellingPrice').value);
                 
-                if (isNaN(costPrice) || isNaN(sellingPrice)) {
-                    alert('Please enter valid numbers');
+                if (isNaN(costPrice) || isNaN(sellingPrice) || costPrice < 0 || sellingPrice < 0) {
+                    customAlert('Please enter valid positive numbers');
                     return;
                 }
                 
@@ -1180,7 +1208,7 @@
                 }
                 
                 document.getElementById('profitLossAmount').textContent = `₹${Math.abs(profitLossAmount).toFixed(2)}`;
-                document.getElementById('profitLossPercent').textContent = `${profitLossPercent.toFixed(2)}%`;
+                document.getElementById('profitLossPercent').textContent = `${(costPrice === 0 ? 0 : profitLossPercent).toFixed(2)}%`;
                 document.getElementById('profitLossStatus').textContent = status;
                 document.getElementById('pnlResults').style.display = 'block';
             });
@@ -1194,8 +1222,8 @@
                 const interestRate = parseFloat(document.getElementById('interestRate').value);
                 const loanTenure = parseFloat(document.getElementById('loanTenure').value);
                 
-                if (isNaN(loanAmount) || isNaN(interestRate) || isNaN(loanTenure)) {
-                    alert('Please enter valid numbers');
+                if (isNaN(loanAmount) || loanAmount <= 0 || isNaN(interestRate) || interestRate <= 0 || isNaN(loanTenure) || loanTenure <= 0) {
+                    customAlert('Please enter valid positive numbers');
                     return;
                 }
                 
@@ -1220,7 +1248,7 @@
                 const valueY = parseFloat(document.getElementById('valueY').value);
                 
                 if (isNaN(valueX) || isNaN(valueY)) {
-                    alert('Please enter valid numbers');
+                    customAlert('Please enter valid numbers');
                     return;
                 }
                 
@@ -1230,12 +1258,24 @@
                         result = (valueX * valueY) / 100;
                         break;
                     case 'percentWhat':
+                        if (valueY === 0) {
+                            customAlert("Cannot divide by zero (Value Y)");
+                            return;
+                        }
                         result = (valueX / valueY) * 100;
                         break;
                     case 'percentIncrease':
+                        if (valueX === 0) {
+                             customAlert("Cannot calculate increase from zero (Value X)");
+                            return;
+                        }
                         result = ((valueY - valueX) / valueX) * 100;
                         break;
                     case 'percentDecrease':
+                         if (valueX === 0) {
+                             customAlert("Cannot calculate decrease from zero (Value X)");
+                            return;
+                        }
                         result = ((valueX - valueY) / valueX) * 100;
                         break;
                 }
@@ -1249,11 +1289,22 @@
         const calculateAge = document.getElementById('calculateAge');
         if (calculateAge) {
             calculateAge.addEventListener('click', () => {
-                const birthDate = new Date(document.getElementById('birthDate').value);
-                const asOfDate = document.getElementById('asOfDate').value ? new Date(document.getElementById('asOfDate').value) : new Date();
+                const birthDateStr = document.getElementById('birthDate').value;
+                if (!birthDateStr) {
+                    customAlert('Please enter a valid birth date');
+                    return;
+                }
+                const birthDate = new Date(birthDateStr);
+                const asOfDateStr = document.getElementById('asOfDate').value;
+                const asOfDate = asOfDateStr ? new Date(asOfDateStr) : new Date();
                 
                 if (isNaN(birthDate.getTime())) {
-                    alert('Please enter a valid birth date');
+                    customAlert('Please enter a valid birth date');
+                    return;
+                }
+
+                if (birthDate > asOfDate) {
+                    customAlert('Birth date cannot be in the future');
                     return;
                 }
                 
@@ -1263,9 +1314,8 @@
                 
                 if (days < 0) {
                     months--;
-                    // Get the number of days in the previous month
-                    const prevMonth = new Date(asOfDate.getFullYear(), asOfDate.getMonth(), 0);
-                    days += prevMonth.getDate();
+                    const prevMonthLastDay = new Date(asOfDate.getFullYear(), asOfDate.getMonth(), 0).getDate();
+                    days += prevMonthLastDay;
                 }
                 
                 if (months < 0) {
@@ -1274,11 +1324,12 @@
                 }
                 
                 // Calculate next birthday
-                const nextBirthday = new Date(asOfDate.getFullYear(), birthDate.getMonth(), birthDate.getDate());
+                let nextBirthday = new Date(asOfDate.getFullYear(), birthDate.getMonth(), birthDate.getDate());
                 if (nextBirthday < asOfDate) {
                     nextBirthday.setFullYear(nextBirthday.getFullYear() + 1);
                 }
-                const daysUntilBirthday = Math.ceil((nextBirthday - asOfDate) / (1000 * 60 * 60 * 24));
+                const timeDiff = nextBirthday.getTime() - asOfDate.getTime();
+                const daysUntilBirthday = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
                 
                 document.getElementById('ageResult').textContent = `${years} years, ${months} months, ${days} days`;
                 document.getElementById('nextBirthday').textContent = `${daysUntilBirthday} days away`;
@@ -1293,8 +1344,8 @@
                 const height = parseFloat(document.getElementById('height').value);
                 const weight = parseFloat(document.getElementById('weight').value);
                 
-                if (isNaN(height) || isNaN(weight)) {
-                    alert('Please enter valid numbers');
+                if (isNaN(height) || height <= 0 || isNaN(weight) || weight <= 0) {
+                    customAlert('Please enter valid positive numbers for height and weight');
                     return;
                 }
                 
@@ -1320,7 +1371,7 @@
 
         // Category Filtering
         const categoryButtons = document.querySelectorAll('.category-btn');
-        const calculatorItems = document.querySelectorAll('.calculator-card');
+        const allCalculatorItems = document.querySelectorAll('.calculators-grid > .calculator-card'); // Select only cards
         
         categoryButtons.forEach(button => {
             button.addEventListener('click', () => {
@@ -1331,38 +1382,47 @@
                 button.classList.add('active');
                 
                 // Filter calculators
-                calculatorItems.forEach(item => {
-                    if (category === 'all' || item.getAttribute('data-category') === category) {
-                        item.style.display = 'block';
+                allCalculatorItems.forEach(item => {
+                    const itemCategory = item.getAttribute('data-category');
+
+                    if (category === 'all' || itemCategory === category) {
+                        item.style.display = 'flex'; // Show matching cards
                     } else {
-                        item.style.display = 'none';
+                        item.style.display = 'none'; // Hide non-matching cards
                     }
                 });
             });
         });
 
         // Search Functionality
-        const searchInputs = document.querySelectorAll('input[type="text"]');
+        const searchInputs = [document.getElementById('searchInput'), document.getElementById('heroSearch')];
         
         searchInputs.forEach(input => {
-            input.addEventListener('input', () => {
-                const searchTerm = input.value.toLowerCase();
+            input.addEventListener('input', (e) => {
+                const searchTerm = e.target.value.toLowerCase();
                 
-                calculatorItems.forEach(item => {
-                    const title = item.querySelector('h3').textContent.toLowerCase();
-                    const description = item.querySelector('p').textContent.toLowerCase();
+                // Sync both search bars
+                searchInputs.forEach(si => si.value = e.target.value);
+
+                allCalculatorItems.forEach(item => {
+                    const title = item.querySelector('h3')?.textContent.toLowerCase() || '';
+                    const description = item.querySelector('p')?.textContent.toLowerCase() || '';
                     
                     if (title.includes(searchTerm) || description.includes(searchTerm)) {
-                        item.style.display = 'block';
+                        item.style.display = 'flex';
                     } else {
                         item.style.display = 'none';
                     }
                 });
+                
+                // Reset category filter when searching
+                categoryButtons.forEach(btn => btn.classList.remove('active'));
+                document.querySelector('.category-btn[data-category="all"]').classList.add('active');
             });
         });
 
-        // Initialize AdSense ads
-        (adsbygoogle = window.adsbygoogle || []).push({});
+        // Adsterra scripts typically initialize themselves.
     </script>
 </body>
 </html>
+
