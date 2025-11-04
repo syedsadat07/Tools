@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- SEO Optimization -->
+    <title>e-toolshub - Free PDF to Image and Image to PDF Tools</title>
+    <meta name="description" content="Your all-in-one free PDF solution. Convert PDF to Image, create PDFs from images, and more. Fast, secure, and entirely online.">
+    <meta name="keywords" content="pdf tools, pdf to image, pdf maker, free pdf converter, online pdf, pdf to png, pdf to jpg, image to pdf, e-toolshub">
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Client-Side Libraries for PDF Manipulation -->
+    <!-- pdf.js (for rendering/reading PDFs) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js"></script>
+    
+    <!-- jsPDF (for creating PDFs) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    
+    <!-- html2canvas (for converting HTML to canvas, to be used with jsPDF) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+    <!-- Custom Styles and Animations -->
+    <style>
+        /* Use the Inter font, a clean default */
+        body {
+            font-family: 'Inter', sans-serif;
+            scroll-behavior: smooth;
+        }
+
+        /* Custom file input */
+        .file-input-label {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            background-color: #4f46e5; /* indigo-600 */
+            color: white;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+        .file-input-label:hover {
+            background-color: #4338ca; /* indigo-700 */
+        }
+        .file-input {
+            display: none;
+        }
+
+        /* Animation for sections fading in on scroll */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .js-show-on-scroll {
+            opacity: 0;
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+            transform: translateY(20px);
+        }
+        
+        .js-show-on-scroll.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+            animation: fadeInUp 0.8s ease-out forwards;
+        }
+
+        /* Ad placeholder styling */
+        .ad-placeholder {
+            background-color: #f3f4f6; /* gray-100 */
+            border: 2px dashed #d1d5db; /* gray-300 */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #6b7280; /* gray-500 */
+            font-weight: 500;
+            border-radius: 0.5rem;
+            text-align: center;
+            padding: 1rem;
+            border: 2px dashed #d1d5db; /* gray-300 */
+            border-radius: 0.5rem;
+            min-height: 150px;
+            background-color: #f9fafb; /* gray-50 */
+        }
+        .preview-container img,
+        .preview-container canvas {
+            max-width: 100%;
+            height: auto;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            border: 1px solid #e5e7eb; /* gray-200 */
+        }
+        .preview-container .page-download {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .preview-container .download-button {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            background-color: #10b981; /* emerald-500 */
+            color: white;
+            border-radius: 0.375rem;
+            font-weight: 500;
+            text-decoration: none;
+            transition: background-color 0.3s ease;
+        }
+        .preview-container .download-button:hover {
+            background-color: #059669; /* emerald-600 */
+        }
+
+        /* Modal for loading/errors */
+        #modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+        #modal.is-visible {
+            opacity: 1;
+            visibility: visible;
+        }
+        /* Modal content is light for contrast */
+        #modal-content {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            text-align: center;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            color: #1f2937; /* gray-800 */
+        }
+        
+        /* Spinner for loading modal */
+        .spinner {
+            width: 24px;
+            height: 24px;
+            border: 4px solid #f3f4f6; /* gray-100 */
+            border-top: 4px solid #4f46e5; /* indigo-600 */
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body class="bg-gray-100 text-gray-800 transition-colors duration-300">
+
+    <!-- Header -->
+    <header class="bg-white/80 backdrop-blur-md shadow-sm sticky top-0 z-50">
+        <nav class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <!-- Logo -->
+                <a href="#" class="flex items-center gap-2">
+                    <svg class="h-8 w-8 text-indigo-600" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M4 22h14a2 2 0 0 0 2-2V7.5L14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2z"/><path d="M10 18l-4-4 4-4"/><path d="M14 10l4 4-4 4"/></svg>
+                    <span class="text-2xl font-bold text-gray-900">e-tools<span class="text-indigo-600">hub</span></span>
+                </a>
+                
+                <!-- Navigation -->
+                <div class="hidden md:flex items-center space-x-6">
+                    <a href="#tools" class="text-gray-600 hover:text-indigo-600 font-medium transition-colors">Tools</a>
+                </div>
+                
+                <!-- Mobile Menu Button -->
+                <div class="flex items-center gap-2">
+                    <div class="md:hidden">
+                        <button class="text-gray-700">
+                            <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" /></svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+
+        <!-- Hero Section -->
+        <section class="text-center py-16 md:py-24 js-show-on-scroll">
+            <h1 class="text-4xl md:text-6xl font-extrabold text-gray-900 leading-tight">
+                The <span class="text-indigo-600">Ultimate Free</span> PDF Toolkit
+            </h1>
+            <p class="mt-6 text-lg md:text-xl text-gray-600 max-w-3xl mx-auto">
+                Convert, create, and manage your PDF files all in one place.
+                No watermarks, no sign-ups. Just fast, free, and secure tools.
+            </p>
+            <a href="#tools" class="mt-10 inline-block bg-indigo-600 text-white text-lg font-semibold px-8 py-3 rounded-lg shadow-lg hover:bg-indigo-700 transition-all transform hover:scale-105">
+                Get Started
+            </a>
+        </section>
+
+        <!-- Ad Placeholder - Banner Ad -->
+        <section id="ads" class="my-12 js-show-on-scroll">
+            <h2 class="text-center text-sm font-semibold text-gray-500 uppercase tracking-wider mb-4">Advertisement</h2>
+            <div class="ad-placeholder min-h-[100px] md:min-h-[250px] max-w-4xl mx-auto">
+                <!-- 
+                  ADSTERRA / ADSENSE CODE HERE
+                  
+                  This is a designated ad space.
+                  Paste your AdSense or Adsterra ad code snippet here.
+                  Example for Adsterra (replace with your actual code):
+                -->
+                <!-- <div class="adsterra-ad-placeholder" data-ad-format="banner" data-ad-id="YOUR_AD_ID"></div> -->
+                728x90 or 970x250 Banner Ad
+            </div>
+        </section>
+
+        <!-- Tools Section -->
+        <section id="tools" class="py-16 space-y-16">
+            
+            <!-- Tool 1: PDF to Image -->
+            <div class="bg-white p-8 md:p-12 rounded-2xl shadow-lg js-show-on-scroll transition-all duration-300 hover:shadow-xl">
+                <div class="flex items-center gap-4">
+                    <div class="p-3 bg-indigo-100 rounded-full">
+                        <svg class="h-8 w-8 text-indigo-600" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><path d="m10 13-2 2 2 2"/><path d="m14 17 2-2-2-2"/><path d="M7 21v-4a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v4"/><path d="M12 11v-2a2 2 0 0 0-2-2H8"/></svg>
+                    </div>
+                    <h2 class="text-3xl font-bold text-gray-900">PDF to Image Converter</h2>
+                </div>
+                <p class="mt-4 text-gray-600">Upload your PDF and get high-quality PNG or JPG images for each page.</p>
+                
+                <div class="mt-8">
+                    <label for="pdfToImageInput" class="file-input-label">
+                        <svg class="inline-block h-5 w-5 mr-2 -mt-1" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" x2="12" y1="3" y2="15"/></svg>
+                        Select PDF File
+                    </label>
+                    <input type="file" id="pdfToImageInput" class="file-input" accept="application/pdf">
+                </div>
+
+                <div id="pdfPreview" class="preview-container">
+                    <p class="text-gray-500 w-full text-center">Your PDF pages will appear here as images...</p>
+                </div>
+            </div>
+
+            <!-- Tool 2: Image to PDF -->
+            <div class="bg-white p-8 md:p-12 rounded-2xl shadow-lg js-show-on-scroll transition-all duration-300 hover:shadow-xl">
+                <div class="flex items-center gap-4">
+                    <div class="p-3 bg-emerald-100 rounded-full">
+                        <svg class="h-8 w-8 text-emerald-600" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><path d="M12 18v-6"/><path d="m9 15 3-3 3 3"/><rect x="4" y="14" width="8" height="6" rx="2"/><path d="m16 13 4 4-4 4"/><path d="M20 17H10"/></svg>
+                    </div>
+                    <h2 class="text-3xl font-bold text-gray-900">Image to PDF Maker</h2>
+                </div>
+                <p class="mt-4 text-gray-600">Combine multiple JPG, PNG, or other images into a single, easy-to-share PDF document.</p>
+                
+                <div class="mt-8 flex flex-col md:flex-row md:items-center gap-4">
+                    <label for="imageToPdfInput" class="file-input-label">
+                        <svg class="inline-block h-5 w-5 mr-2 -mt-1" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" x2="12" y1="3" y2="15"/></svg>
+                        Select Images
+                    </label>
+                    <input type="file" id="imageToPdfInput" class="file-input" accept="image/*" multiple>
+                    
+                    <button id="createPdfButton" class="bg-emerald-600 text-white font-semibold px-6 py-3 rounded-lg shadow hover:bg-emerald-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed" disabled>
+                        Create PDF
+                    </button>
+                </div>
+
+                <div id="imagePreview" class="preview-container">
+                    <p class="text-gray-500 w-full text-center">Your selected images will appear here...</p>
+                </div>
+            </div>
+
+            <!-- Ad Placeholder - In-Content Ad -->
+            <div class="ad-placeholder min-h-[250px] js-show-on-scroll">
+                300x250 or 336x280 In-Article Ad
+                <!-- 
+                  ADSTERRA / ADSENSE CODE HERE 
+                  Paste your ad code snippet here.
+                -->
+            </div>
+
+            <!-- Tool 3: HTML to PDF (Demo) -->
+            <!-- This section has been removed as requested. -->
+
+        </section>
+        
+        <!-- Features Section -->
+        <section id="features" class="py-16 js-show-on-scroll">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl md:text-4xl font-bold text-gray-900">Why Choose e-toolshub?</h2>
+                <p class="mt-4 text-lg text-gray-600">Simple, powerful, and built for you.</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Feature 1 -->
+                <div class="bg-white p-8 rounded-lg shadow-lg text-center transition-all duration-300 transform hover:scale-105">
+                    <div class="p-4 bg-indigo-100 rounded-full inline-block">
+                        <svg class="h-10 w-10 text-indigo-600" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2z"/></svg>
+                    </div>
+                    <h3 class="mt-4 text-xl font-semibold text-gray-900">Lightning Fast</h3>
+                    <p class="mt-2 text-gray-600">All processing happens directly in your browser. No uploads mean instant results.</p>
+                </div>
+                <!-- Feature 2 -->
+                <div class="bg-white p-8 rounded-lg shadow-lg text-center transition-all duration-300 transform hover:scale-105">
+                    <div class="p-4 bg-emerald-100 rounded-full inline-block">
+                        <svg class="h-10 w-10 text-emerald-600" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                    </div>
+                    <h3 class="mt-4 text-xl font-semibold text-gray-900">Completely Secure</h3>
+                    <p class="mt-2 text-gray-600">Your files never leave your computer. We respect your privacy 100%.</p>
+                </div>
+                <!-- Feature 3 -->
+                <div class="bg-white p-8 rounded-lg shadow-lg text-center transition-all duration-300 transform hover:scale-105">
+                    <div class="p-4 bg-sky-100 rounded-full inline-block">
+                        <svg class="h-10 w-10 text-sky-600" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.994 12.12a1 1 0 0 0-1-1.12H4.006a1 1 0 0 0-1 1.12l1.54 6.84A2 2 0 0 0 6.495 20h11.01a2 2 0 0 0 1.95-1.04l1.54-6.84z"/><path d="M16 11V6a4 4 0 0 0-8 0v5"/></svg>
+                    </div>
+                    <h3 class="mt-4 text-xl font-semibold text-gray-900">100% Free</h3>
+                    <p class="mt-2 text-gray-600">All tools are completely free to use, forever. No limits, no subscriptions.</p>
+                </div>
+                    <h3 class="mt-4 text-xl font-semibold text-white">Lightning Fast</h3>
+                    <p class="mt-2 text-gray-400">All processing happens directly in your browser. No uploads mean instant results.</p>
+                </div>
+                <!-- Feature 2 -->
+                <div class="bg-slate-800 p-8 rounded-lg shadow-lg text-center transition-all duration-300 transform hover:scale-105">
+                    <div class="p-4 bg-emerald-900 rounded-full inline-block">
+                        <svg class="h-10 w-10 text-emerald-300" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                    </div>
+                    <h3 class="mt-4 text-xl font-semibold text-white">Completely Secure</h3>
+                    <p class="mt-2 text-gray-400">Your files never leave your computer. We respect your privacy 100%.</p>
+                </div>
+                <!-- Feature 3 -->
+                <div class="bg-slate-800 p-8 rounded-lg shadow-lg text-center transition-all duration-300 transform hover:scale-105">
+                    <div class="p-4 bg-sky-900 rounded-full inline-block">
+                        <svg class="h-10 w-10 text-sky-300" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.994 12.12a1 1 0 0 0-1-1.12H4.006a1 1 0 0 0-1 1.12l1.54 6.84A2 2 0 0 0 6.495 20h11.01a2 2 0 0 0 1.95-1.04l1.54-6.84z"/><path d="M16 11V6a4 4 0 0 0-8 0v5"/></svg>
+                    </div>
+                    <h3 class="mt-4 text-xl font-semibold text-white">100% Free</h3>
+                    <p class="mt-2 text-gray-400">All tools are completely free to use, forever. No limits, no subscriptions.</p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+    
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-gray-300 mt-16">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <p>&copy; 2025 e-toolshub. All rights reserved.</p>
+                <div class="flex space-x-4 mt-4 md:mt-0">
+                    <a href="#" class="hover:text-white transition-colors">Privacy Policy</a>
+                    <a href="#" class="hover:text-white transition-colors">Terms of Service</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Modal for Loading/Error Messages -->
+    <div id="modal" class="hidden">
+        <div id="modal-content">
+            <div id="modal-spinner" class="spinner"></div>
+            <span id="modal-message" class="text-lg font-medium">Processing...</span>
+        </div>
+    </div>
+
+    <!-- 
+      ADSTERRA SCRIPT
+      
+      This is the script provided by Adsterra. 
+      You would uncomment this and replace 'YOUR_WEBSITE_ID' and 'YOUR_PLACEMENT_ID'
+      with the actual values from your Adsterra account.
+    -->
+    <!-- 
+    <script type='text/javascript' src='//pl123456.highcpmgate.com/YOUR_PLACEMENT_ID/YOUR_WEBSITE_ID/page.js'></script>
+    -->
+
+    <!-- Main Application JavaScript -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            // --- Library Setup ---
+            const { pdfjsLib } = window;
+            const { jsPDF } = window.jspdf;
+            const { html2canvas } = window;
+
+            // Set up the PDF.js worker
+            if (pdfjsLib) {
+                pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
+            }
+
+            // --- Ad Integration (Placeholder) ---
+            // This is where you would initialize your ads.
+            // For Adsterra, you might not need extra JS, just the script tag.
+            // For AdSense, you might have an `(adsbygoogle = window.adsbygoogle || []).push({});`
+            console.log("Ad placeholders are ready.");
+
+            // --- Scroll Animations ---
+            const scrollElements = document.querySelectorAll('.js-show-on-scroll');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('is-visible');
+                        // No need to keep observing it
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            scrollElements.forEach(el => {
+                observer.observe(el);
+            });
+
+            // --- Modal Logic ---
+            const modal = document.getElementById('modal');
+            const modalMessage = document.getElementById('modal-message');
+            const modalSpinner = document.getElementById('modal-spinner');
+
+            function showModal(message, isError = false) {
+                modalMessage.textContent = message;
+                modal.classList.add('is-visible');
+                modal.classList.remove('hidden');
+                
+                if (isError) {
+                    modalSpinner.style.display = 'none';
+                    modalMessage.classList.add('text-red-600');
+                } else {
+                    modalSpinner.style.display = 'block';
+                    modalMessage.classList.remove('text-red-600');
+                }
+            }
+
+            function hideModal() {
+                modal.classList.remove('is-visible');
+                modal.classList.add('hidden');
+            }
+            
+            // Close modal on click outside (optional but good UX)
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    hideModal();
+                }
+            });
+
+            // --- Tool 1: PDF to Image ---
+            const pdfToImageInput = document.getElementById('pdfToImageInput');
+            const pdfPreview = document.getElementById('pdfPreview');
+
+            pdfToImageInput.addEventListener('change', async (e) => {
+                const file = e.target.files[0];
+                if (!file || file.type !== 'application/pdf') {
+                    showModal("Please select a valid PDF file.", true);
+                    setTimeout(hideModal, 2000);
+                    return;
+                }
+
+                showModal("Processing your PDF...");
+                
+                pdfPreview.innerHTML = '<p class="text-gray-500 w-full text-center">Loading pages...</p>';
+
+                try {
+                    const fileReader = new FileReader();
+                    fileReader.readAsArrayBuffer(file);
+                    
+                    fileReader.onload = async (ev) => {
+                        const typedarray = new Uint8Array(ev.target.result);
+                        const pdf = await pdfjsLib.getDocument({ data: typedarray }).promise;
+                        
+                        pdfPreview.innerHTML = ''; // Clear loading message
+                        
+                        for (let i = 1; i <= pdf.numPages; i++) {
+                            const page = await pdf.getPage(i);
+                            const scale = 1.5;
+                            const viewport = page.getViewport({ scale });
+                            
+                            const canvas = document.createElement('canvas');
+                            const context = canvas.getContext('2d');
+                            canvas.height = viewport.height;
+                            canvas.width = viewport.width;
+                            canvas.classList.add('shadow-md', 'rounded-lg');
+                            
+                            await page.render({ canvasContext: context, viewport: viewport }).promise;
+                            
+                            // Create a download link for each page
+                            const a = document.createElement('a');
+                            a.href = canvas.toDataURL('image/png');
+                            a.download = `page_${i}_from_${file.name.replace('.pdf', '')}.png`;
+                            a.textContent = `Download Page ${i} (PNG)`;
+                            a.classList.add('download-button');
+                            
+                            const pageWrapper = document.createElement('div');
+                            pageWrapper.classList.add('page-download');
+                            pageWrapper.appendChild(canvas);
+                            pageWrapper.appendChild(a);
+                            
+                            pdfPreview.appendChild(pageWrapper);
+                        }
+                        hideModal();
+                    };
+                } catch (error) {
+                    console.error("Error processing PDF:", error);
+                    pdfPreview.innerHTML = '<p class="text-red-500 w-full text-center">Error processing PDF. The file might be corrupt.</p>';
+                    showModal("Error processing PDF.", true);
+                    setTimeout(hideModal, 3000);
+                }
+            });
+
+            <!-- --- Tool 2: Image to PDF --- -->
+            const imageToPdfInput = document.getElementById('imageToPdfInput');
+            const imagePreview = document.getElementById('imagePreview');
+            const createPdfButton = document.getElementById('createPdfButton');
+            let uploadedImages = [];
+
+            imageToPdfInput.addEventListener('change', (e) => {
+                const files = e.target.files;
+                if (files.length === 0) return;
+                
+                imagePreview.innerHTML = ''; // Clear preview
+                uploadedImages = [];
+                createPdfButton.disabled = true;
+
+                let filesLoaded = 0;
+                
+                Array.from(files).forEach(file => {
+                    if (!file.type.startsWith('image/')){ return; } // Skip non-image files
+                    
+                    const reader = new FileReader();
+                    reader.readAsDataURL(file);
+                    reader.onload = (ev) => {
+                        const imgData = ev.target.result;
+                        uploadedImages.push(imgData);
+                        
+                        const imgElement = document.createElement('img');
+                        imgElement.src = imgData;
+                        imgElement.classList.add('h-40', 'object-cover', 'rounded-lg', 'shadow');
+                        imagePreview.appendChild(imgElement);
+                        
+                        filesLoaded++;
+                        if (filesLoaded === files.length) {
+                            createPdfButton.disabled = false;
+                        }
+                    };
+                });
+            });
+
+            createPdfButton.addEventListener('click', () => {
+                if (uploadedImages.length === 0) {
+                    showModal("Please select images first.", true);
+                    setTimeout(hideModal, 2000);
+                    return;
+                }
+
+                showModal("Creating your PDF...");
+                
+                try {
+                    const doc = new jsPDF('p', 'mm', 'a4');
+                    const pdfWidth = doc.internal.pageSize.getWidth();
+                    const pdfHeight = doc.internal.pageSize.getHeight();
+                    
+                    // A4 aspect ratio
+                    const a4Ratio = pdfHeight / pdfWidth;
+
+                    uploadedImages.forEach((imgData, index) => {
+                        if (index > 0) {
+                            doc.addPage();
+                        }
+                        
+                        // We need to get image dimensions to scale it correctly
+                        const img = new Image();
+                        img.src = imgData;
+                        
+                        const imgRatio = img.height / img.width;
+                        let finalWidth, finalHeight;
+                        
+                        // Add 10mm margins
+                        const margin = 10;
+                        const usableWidth = pdfWidth - (margin * 2);
+                        const usableHeight = pdfHeight - (margin * 2);
+                        const usableRatio = usableHeight / usableWidth;
+
+                        if (imgRatio > usableRatio) {
+                            // Image is taller
+                            finalHeight = usableHeight;
+                            finalWidth = finalHeight / imgRatio;
+                        } else {
+                            // Image is wider
+                            finalWidth = usableWidth;
+                            finalHeight = finalWidth * imgRatio;
+                        }
+                        
+                        const x = (pdfWidth - finalWidth) / 2; // Center horizontally
+                        const y = (pdfHeight - finalHeight) / 2; // Center vertically
+                        
+                        // Determine image type from data URL
+                        const imgType = imgData.substring(imgData.indexOf(":") + 1, imgData.indexOf(";"));
+                        const format = (imgType === 'image/png') ? 'PNG' : 'JPEG';
+
+                        doc.addImage(imgData, format, x, y, finalWidth, finalHeight);
+                    });
+
+                    doc.save('e-toolshub-converted.pdf');
+                    hideModal();
+                } catch (error) {
+                    console.error("Error creating PDF:", error);
+                    showModal("Error creating PDF.", true);
+                    setTimeout(hideModal, 3000);
+                }
+            });
+
+            // --- Tool 3: HTML to PDF ---
+            // This section has been removed as requested.
+
+        });
+    </script>
+</body>
+</html>
+
+
