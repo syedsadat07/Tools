@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="en" class=""> <!-- 'dark' class will be added here -->
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- 
+      ============================================================
+      SEO (Search Engine Optimization) & Metadata
+      ============================================================
+    -->
+    <title>Dynamic QR Code Generator | Free & Instant QR Codes | Toolsbin</title>
+    <meta name="description" content="Create, customize, and download high-quality QR codes instantly for free on Toolsbin. Our tool works with URLs, text, vCards, and more.">
+    <meta name="keywords" content="qr code generator, free qr code, create qr code, dynamic qr code, qr code url, qr code text, qr code for website, qr code vcard, toolsbin">
+    
+    <!-- TODO: Change this to your final domain -->
+    <link rel="canonical" href="https://your-domain.com/">
+    <meta name="robots" content="index, follow">
+
+    <!-- Open Graph / Facebook / LinkedIn -->
+    <meta property="og:title" content="Dynamic QR Code Generator | Free & Instant | Toolsbin">
+    <meta property="og:description" content="Instantly create and download custom QR codes for your links, text, or contact info.">
+    <meta property="og:type" content="website">
+    <!-- TODO: Change this to your final domain -->
+    <meta property="og:url" content="https://your-domain.com/">
+    <!-- TODO: Change this to an image of your site (e.g., a screenshot) -->
+    <meta property="og:image" content="https://placehold.co/1200x630/3498db/ffffff?text=Toolsbin+QR+Generator">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <!-- TODO: Change this to your Twitter handle -->
+    <meta name="twitter:site" content="@yourtwitterhandle">
+    <meta name="twitter:title" content="Dynamic QR Code Generator | Free & Instant | Toolsbin">
+    <meta name="twitter:description" content="Instantly create and download custom QR codes.">
+    <!-- TODO: Change this to your preview image -->
+    <meta name="twitter:image" content="https://placehold.co/1200x630/3498db/ffffff?text=Toolsbin+QR+Generator">
+
+    <!-- JSON-LD Structured Data (for SEO) -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "Dynamic QR Code Generator by Toolsbin",
+      "applicationCategory": "Productivity",
+      "operatingSystem": "Web",
+      "browserRequirements": "Requires JavaScript and HTML5 Canvas.",
+      "description": "A free online tool to generate and download custom QR codes.",
+      "url": "https://your-domain.com/",
+      "potentialAction": {
+        "@type": "CreateAction",
+        "target": "https://your-domain.com/"
+      },
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      }
+    }
+    </script>
+
+    <!-- 
+      ============================================================
+      Performance & Styling
+      ============================================================
+    -->
+    <!-- Preconnect to CDN for faster font and script loading -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://cdn.tailwindcss.com">
+
+    <!-- Google Font: Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Custom Tailwind Configuration -->
+    <script>
+      tailwind.config = {
+        // Enable dark mode using the 'class' strategy
+        darkMode: 'class',
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['Inter', 'sans-serif'],
+            },
+            colors: {
+              primary: {
+                DEFAULT: '#3498db',
+                hover: '#2980b9'
+              },
+              secondary: {
+                DEFAULT: '#95a5a6',
+                hover: '#7f8c8d'
+              }
+            }
+          }
+        }
+      }
+    </script>
+
+    <!-- Custom Styles (Minimal) -->
+    <style type="text/css">
+      /* Style for the ad placeholder */
+      .ad-placeholder {
+        background: #f0f2f5;
+        border: 2px dashed #bdc3c7;
+        color: #7f8c8d;
+        min-height: 100px;
+      }
+      /* Dark mode style for ad placeholder */
+      .dark .ad-placeholder {
+        background: #2d3748; /* Tailwind gray-800 */
+        border-color: #4a5568; /* Tailwind gray-600 */
+        color: #718096; /* Tailwind gray-500 */
+      }
+      
+      /* Hide download link initially */
+      #downloadBtn {
+        display: none;
+      }
+      
+      /* Custom focus ring for accessibility */
+      :focus-visible {
+        outline: 2px solid #3498db;
+        outline-offset: 2px;
+      }
+
+      /* Hide icons by default, JS will show the correct one */
+      #themeIconDark,
+      #themeIconLight {
+        display: none;
+      }
+    </style>
+</head>
+
+<!-- Added dark mode classes for body -->
+<body class="font-sans bg-gray-50 text-gray-900 min-h-screen flex flex-col antialiased dark:bg-gray-900 dark:text-gray-200">
+
+    <!-- 
+      ============================================================
+      NEW: Navigation Bar with Theme Toggle
+      ============================================================
+    -->
+    <nav class="w-full bg-white dark:bg-gray-800 shadow-md sticky top-0 z-50">
+      <div class="container mx-auto max-w-6xl p-4 flex justify-between items-center">
+        <a href="/" class="text-2xl font-bold text-primary">Toolsbin</a>
+        <button id="themeToggleBtn" class="p-2 rounded-lg text-gray-800 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-primary" aria-label="Toggle dark mode">
+          <!-- Moon Icon -->
+          <svg id="themeIconDark" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+          <!-- Sun Icon -->
+          <svg id="themeIconLight" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m8.66-15.66l-.707.707M4.04 19.96l-.707.707M21 12h-1M4 12H3m15.66 8.66l-.707-.707M4.04 4.04l-.707-.707"></path></svg>
+        </button>
+      </div>
+    </nav>
+
+    <!-- 
+      ============================================================
+      ADSTERRA TOP AD SLOT
+      ============================================================
+    -->
+    <header class="w-full bg-white dark:bg-gray-800 shadow-sm" role="banner">
+      <div class="container mx-auto max-w-6xl p-4">
+        <!-- Added dark mode classes to ad placeholder -->
+        <div class="ad-placeholder rounded-lg flex items-center justify-center text-center p-4">
+          
+          <!-- 
+            >>> PASTE YOUR ADSTERRA AD UNIT CODE HERE <<<
+            
+            This is the top advertisement slot.
+            Replace the content of this div with your Adsterra code.
+
+            Example (commented out):
+            <iframe src="//adsterra.com/..." scrolling="no" frameborder="0" style="width:728px; height:90px;"></iframe>
+          -->
+          <span class="text-sm font-medium">Top Advertisement Slot (728x90)</span>
+
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-grow w-full py-8 md:py-12" role="main">
+      <div class="container mx-auto max-w-6xl p-4">
+
+        <!-- Page Header -->
+        <div class="text-center mb-8 md:mb-12">
+          <h1 class="text-3xl md:text-5xl font-bold text-gray-800 dark:text-gray-100 mb-3">Dynamic QR Code Generator</h1>
+          <p class="text-lg md:text-xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">
+            Create, customize, and download your free QR code in seconds.
+          </p>
+        </div>
+
+        <!-- Main Tool Grid (Mobile-first) -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+
+          <!-- Left Column: Controls -->
+          <form id="qrForm" class="lg:col-span-2 bg-white dark:bg-gray-800 p-6 md:p-8 rounded-2xl shadow-lg" aria-label="QR Code Generator Form">
+            <div class="space-y-6">
+              
+              <!-- Data Input -->
+              <div>
+                <label for="data" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  Your Data (URL, Text, vCard, etc.)
+                </label>
+                <textarea 
+                  id="data" 
+                  name="data" 
+                  rows="4" 
+                  class="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-primary focus:border-primary transition duration-150 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:placeholder-gray-400" 
+                  placeholder="Enter a website URL (https://google.com) or any text..."
+                  required
+                  aria-required="true"
+                  aria-label="Your Data (URL, Text, vCard, etc.)"
+                ></textarea>
+                <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">
+                  To create a vCard, use this format: <br>
+                  <code class="text-xs dark:text-gray-300">BEGIN:VCARD\nVERSION:3.0\nN:Last;First\nFN:First Last\nTEL:123456789\nEMAIL:test@example.com\nEND:VCARD</code>
+                </p>
+              </div>
+
+              <!-- Options Grid -->
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                
+                <!-- Size Slider -->
+                <div>
+                  <label for="size" class="flex justify-between text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    Size (px)
+                    <output id="sizeOutput" class="font-semibold text-primary">300px</output>
+                  </label>
+                  <input 
+                    type="range" 
+                    id="size" 
+                    name="size" 
+                    min="100" 
+                    max="1000" 
+                    step="50" 
+                    value="300" 
+                    class="w-full h-2 bg-gray-200 dark:bg-gray-600 rounded-lg appearance-none cursor-pointer"
+                    aria-label="QR Code Size in pixels"
+                  >
+                </div>
+
+                <!-- Error Correction -->
+                <div>
+                  <label for="errorLevel" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Error Correction</label>
+                  <select 
+                    id="errorLevel" 
+                    name="errorLevel" 
+                    class="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-primary focus:border-primary transition duration-150 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                    aria-label="Error Correction Level"
+                  >
+                    <option value="L" selected>Low (L) - 7%</option>
+                    <option value="M">Medium (M) - 15%</option>
+                    <option value="Q">Quartile (Q) - 25%</option>
+                    <option value="H">High (H) - 30%</option>
+                  </select>
+                </div>
+
+                <!-- Foreground Color -->
+                <div>
+                  <label for="fgColor" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Foreground Color</label>
+                  <div class="flex items-center border border-gray-300 rounded-lg shadow-sm overflow-hidden focus-within:ring-primary focus-within:border-primary dark:border-gray-600">
+                    <input 
+                      type="color" 
+                      id="fgColor" 
+                      name="fgColor" 
+                      value="#000000" 
+                      class="w-12 h-12 p-0 border-none cursor-pointer"
+                      aria-label="Foreground Color"
+                    >
+                    <input 
+                      type="text" 
+                      id="fgColorHex"
+                      value="#000000"
+                      class="w-full p-3 border-none focus:ring-0 dark:bg-gray-700 dark:text-white"
+                      aria-label="Foreground Color Hex Code"
+                    >
+                  </div>
+                </div>
+
+                <!-- Background Color -->
+                <div>
+                  <label for="bgColor" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Background Color</label>
+                  <div class="flex items-center border border-gray-300 rounded-lg shadow-sm overflow-hidden focus-within:ring-primary focus-within:border-primary dark:border-gray-600">
+                    <input 
+                      type="color" 
+                      id="bgColor" 
+                      name="bgColor" 
+                      value="#ffffff" 
+                      class="w-12 h-12 p-0 border-none cursor-pointer"
+                      aria-label="Background Color"
+                    >
+                    <input 
+                      type="text" 
+                      id="bgColorHex"
+                      value="#ffffff"
+                      class="w-full p-3 border-none focus:ring-0 dark:bg-gray-700 dark:text-white"
+                      aria-label="Background Color Hex Code"
+                    >
+                  </div>
+                </div>
+              </div>
+
+              <!-- Action Buttons -->
+              <div class="flex flex-col sm:flex-row gap-4 pt-4 border-t border-gray-200 dark:border-gray-700">
+                <button 
+                  type="submit" 
+                  class="w-full sm:w-auto flex-1 px-6 py-3 text-white font-medium bg-primary rounded-lg shadow-md hover:bg-primary-hover focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 transition duration-150"
+                  aria-label="Generate QR Code (Shortcut: Ctrl+G)"
+                >
+                  Generate QR Code
+                </button>
+                <button 
+                  type="button" 
+                  id="clearBtn" 
+                  class="w-full sm:w-auto px-6 py-3 text-gray-700 font-medium bg-gray-200 rounded-lg shadow-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-secondary focus:ring-offset-2 transition duration-150 dark:bg-gray-600 dark:text-gray-200 dark:hover:bg-gray-500"
+                  aria-label="Clear all inputs and reset preview"
+                >
+                  Clear
+                </button>
+              </div>
+
+            </div>
+          </form>
+
+          <!-- Right Column: Preview -->
+          <aside class="lg:col-span-1" role="complementary" aria-label="QR Code Preview and Download">
+            <div class="bg-white dark:bg-gray-800 p-6 md:p-8 rounded-2xl shadow-lg sticky top-28"> <!-- Adjusted sticky top -->
+              <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-100 mb-4">Preview</h2>
+              
+              <!-- QR Code Canvas Container -->
+              <div id="previewContainer" class="w-full aspect-square bg-gray-100 dark:bg-gray-700 rounded-lg flex items-center justify-center p-4 border border-gray-200 dark:border-gray-600 overflow-hidden">
+                <canvas id="qrCanvas" class="max-w-full max-h-full"></canvas>
+                <div id="qrPlaceholder" class="text-center text-gray-500 dark:text-gray-400">
+                  <svg class="w-16 h-16 mx-auto text-gray-400 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                  <p class="mt-2 font-medium">Your QR code will appear here</p>
+                </div>
+              </div>
+
+              <!-- Download Button -->
+              <a 
+                href="#" 
+                id="downloadBtn" 
+                download="qr-code.png"
+                class="mt-6 w-full block text-center px-6 py-3 text-white font-medium bg-green-600 rounded-lg shadow-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition duration-150"
+                aria-label="Download QR Code as PNG"
+              >
+                Download PNG
+              </a>
+
+              <!-- Usage Tips -->
+              <div class="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
+                <h3 class="text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2">Usage Tips</h3>
+                <ul class="list-disc list-inside space-y-1 text-sm text-gray-600 dark:text-gray-400">
+                  <li><strong>High Error Correction (H)</strong> is best if you plan to put a logo in the center.</li>
+                  <li>Ensure good contrast between foreground and background colors.</li>
+                  <li>Test your QR code with multiple devices before printing.</li>
+                  <li><strong>Shortcut:</strong> Press <kbd class="font-sans px-1.5 py-0.5 bg-gray-200 rounded text-gray-700 dark:bg-gray-600 dark:text-gray-200">Ctrl+G</kbd> or <kbd class="font-sans px-1.5 py-0.5 bg-gray-200 rounded text-gray-700 dark:bg-gray-600 dark:text-gray-200">Cmd+G</kbd> to generate.</li>
+                </ul>
+              </div>
+
+            </div>
+          </aside>
+        </div>
+      </div>
+    </main>
+
+    <!-- 
+      ============================================================
+      ADSTERRA BOTTOM AD SLOT
+      ============================================================
+    -->
+    <div class="w-full bg-white dark:bg-gray-800 mt-auto" role="complementary">
+      <div class="container mx-auto max-w-6xl p-4">
+        <!-- Added dark mode classes to ad placeholder -->
+        <div class="ad-placeholder rounded-lg flex items-center justify-center text-center p-4">
+          
+          <!-- 
+            >>> PASTE YOUR ADSTERRA AD UNIT CODE HERE <<<
+            
+            This is the bottom advertisement slot.
+            Replace the content of this div with your Adsterra code.
+
+            Example (commented out):
+            <iframe src="//adsterra.com/..." scrolling="no" frameborder="0" style="width:728px; height:90px;"></iframe>
+          -->
+          <span class="text-sm font-medium">Bottom Advertisement Slot (728x90)</span>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="w-full text-center p-6 text-gray-600 dark:text-gray-400 text-sm bg-gray-100 dark:bg-gray-900" role="contentinfo">
+      <!-- UPDATED Footer Name -->
+      <p>&copy; <span id="currentYear"></span> Toolsbin. All rights reserved.</p>
+      <p class="mt-1">
+        <!-- You can add simple links here -->
+        <a href="#" class="hover:underline dark:hover:text-primary-hover">Privacy Policy</a> &middot; 
+        <a href="#" class="hover:underline dark:hover:text-primary-hover">Terms of Service</a>
+      </p>
+    </footer>
+
+    <!-- 
+      ============================================================
+      JavaScript Logic
+      ============================================================
+    -->
+
+    <!-- QR Code Library (qrious) - Deferred for performance -->
+    <script src="https://cdn.jsdelivr.net/npm/qrious@4.0.2/dist/qrious.min.js" defer></script>
+
+    <!-- Application Logic -->
+    <script>
+      // Wait for the DOM to be fully loaded
+      document.addEventListener('DOMContentLoaded', () => {
+
+        // --- 1. Select DOM Elements ---
+        const qrForm = document.getElementById('qrForm');
+        const dataInput = document.getElementById('data');
+        const sizeInput = document.getElementById('size');
+        const sizeOutput = document.getElementById('sizeOutput');
+        const errorLevelInput = document.getElementById('errorLevel');
+        const fgColorInput = document.getElementById('fgColor');
+        const bgColorInput = document.getElementById('bgColor');
+        const fgColorHex = document.getElementById('fgColorHex');
+        const bgColorHex = document.getElementById('bgColorHex');
+        const qrCanvas = document.getElementById('qrCanvas');
+        const qrPlaceholder = document.getElementById('qrPlaceholder');
+        const downloadBtn = document.getElementById('downloadBtn');
+        const clearBtn = document.getElementById('clearBtn');
+        const currentYearEl = document.getElementById('currentYear');
+        // NEW: Theme Toggle Elements
+        const themeToggleBtn = document.getElementById('themeToggleBtn');
+        const themeIconDark = document.getElementById('themeIconDark');
+        const themeIconLight = document.getElementById('themeIconLight');
+
+        let qr = null; // To hold the QRious instance
+
+        // --- 2. Core Functions ---
+
+        /**
+         * Generates the QR code based on form inputs
+         */
+        const generateQRCode = () => {
+          const data = dataInput.value;
+          
+          // Simple validation
+          if (!data.trim()) {
+            // Use a subtle visual cue instead of an alert
+            dataInput.classList.add('border-red-500', 'ring-red-500');
+            dataInput.focus();
+            return;
+          }
+          // Remove error state if present
+          dataInput.classList.remove('border-red-500', 'ring-red-500');
+
+          try {
+            // Hide placeholder, show canvas
+            qrPlaceholder.style.display = 'none';
+            qrCanvas.style.display = 'block';
+
+            // Create or update the QRious instance
+            qr = new QRious({
+              element: qrCanvas,
+              value: data,
+              size: parseInt(sizeInput.value, 10),
+              level: errorLevelInput.value,
+              foreground: fgColorInput.value,
+              background: bgColorInput.value,
+              padding: 20 // Add some padding
+            });
+
+            // Update the download link
+            updateDownloadLink();
+
+            // Show the download button
+            downloadBtn.style.display = 'block';
+
+            // Save the data to localStorage
+            localStorage.setItem('qrData', data);
+
+          } catch (e) {
+            console.error("Error generating QR code:", e);
+            // Fallback: Show an error message
+            qrPlaceholder.innerHTML = '<p class="text-red-600 dark:text-red-400">Error generating QR code. Please check your input.</p>';
+            qrPlaceholder.style.display = 'flex';
+            qrCanvas.style.display = 'none';
+          }
+        };
+
+        /**
+         * Updates the download button's href with the current canvas data
+         */
+        const updateDownloadLink = () => {
+          if (qrCanvas) {
+            // Generate a data URL for the canvas content
+            downloadBtn.href = qrCanvas.toDataURL('image/png');
+          }
+        };
+
+        /**
+         * Clears the form, localStorage, and canvas preview
+         */
+        const clearForm = () => {
+          qrForm.reset(); // Resets all form fields to their defaults
+          
+          // Manually reset color text inputs
+          fgColorHex.value = '#000000';
+          bgColorHex.value = '#ffffff';
+          
+          // Reset size output
+          sizeOutput.textContent = '300px';
+
+          // Clear stored data
+          localStorage.removeItem('qrData');
+
+          // Clear the canvas
+          const ctx = qrCanvas.getContext('2d');
+          ctx.clearRect(0, 0, qrCanvas.width, qrCanvas.height);
+          
+          // Hide canvas, show placeholder
+          qrCanvas.style.display = 'none';
+          qrPlaceholder.style.display = 'flex';
+          qrPlaceholder.innerHTML = '<p class="mt-2 font-medium">Your QR code will appear here</p>'; // Reset placeholder text
+          
+          // Hide download button
+          downloadBtn.style.display = 'none';
+          
+          // Remove error state if present
+          dataInput.classList.remove('border-red-500', 'ring-red-500');
+        };
+
+        /**
+         * Loads the last used data from localStorage
+         */
+        const loadFromStorage = () => {
+          const savedData = localStorage.getItem('qrData');
+          if (savedData) {
+            dataInput.value = savedData;
+            // Generate QR code on load if data exists
+            // Deferring slightly to ensure qrious.min.js has loaded
+            setTimeout(generateQRCode, 100); 
+          }
+        };
+
+        // --- 3. Event Listeners ---
+
+        // Generate button click
+        qrForm.addEventListener('submit', (e) => {
+          e.preventDefault(); // Stop form submission
+          generateQRCode();
+        });
+
+        // Clear button click
+        clearBtn.addEventListener('click', clearForm);
+
+        // Update size output text as slider moves
+        sizeInput.addEventListener('input', (e) => {
+          sizeOutput.textContent = e.target.value + 'px';
+        });
+
+        // Sync color pickers with text inputs
+        fgColorInput.addEventListener('input', (e) => {
+          fgColorHex.value = e.target.value;
+        });
+        fgColorHex.addEventListener('input', (e) => {
+          fgColorInput.value = e.target.value;
+        });
+        bgColorInput.addEventListener('input', (e) => {
+          bgColorHex.value = e.target.value;
+        });
+        bgColorHex.addEventListener('input', (e) => {
+          bgColorInput.value = e.target.value;
+        });
+        
+        // Accessibility: Keyboard shortcut (Ctrl+G or Cmd+G)
+        document.addEventListener('keydown', (e) => {
+          if ((e.ctrlKey || e.metaKey) && e.key === 'g') {
+            e.preventDefault(); // Prevent browser "Find" dialog
+            generateQRCode();
+          }
+        });
+
+        // --- 4. NEW: Theme Toggle Logic ---
+        const themeKey = 'theme-preference';
+
+        const updateThemeIcons = (theme) => {
+          if (theme === 'dark') {
+            themeIconDark.style.display = 'block';
+            themeIconLight.style.display = 'none';
+          } else {
+            themeIconDark.style.display = 'none';
+            themeIconLight.style.display = 'block';
+          }
+        };
+
+        const applyTheme = (theme) => {
+          if (theme === 'dark') {
+            document.documentElement.classList.add('dark');
+          } else {
+            document.documentElement.classList.remove('dark');
+          }
+          updateThemeIcons(theme);
+          localStorage.setItem(themeKey, theme);
+        };
+
+        // Check for saved theme
+        let currentTheme = localStorage.getItem(themeKey);
+        if (!currentTheme) {
+          // Check system preference
+          currentTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        }
+        applyTheme(currentTheme);
+
+        // Add click listener
+        themeToggleBtn.addEventListener('click', () => {
+          let newTheme = document.documentElement.classList.contains('dark') ? 'light' : 'dark';
+          applyTheme(newTheme);
+        });
+
+        // --- 5. Initialization ---
+
+        // Set the current year in the footer (FIXED)
+        currentYearEl.textContent = new Date().getFullYear();
+
+        // Load data from storage
+        // We must check if qrious is loaded, or defer this
+        if (typeof QRious !== 'undefined') {
+          loadFromStorage();
+        } else {
+          // If qrious isn't loaded yet (due to defer), wait for it
+          window.addEventListener('load', loadFromStorage);
+        }
+
+        // Fallback for browsers with JavaScript disabled
+        const noscript = document.createElement('noscript');
+        noscript.innerHTML = `
+          <div class="container mx-auto p-4 text-center bg-red-100 text-red-800 border border-red-300 rounded-lg dark:bg-red-900 dark:text-red-100 dark:border-red-700">
+            <strong>JavaScript is required for this QR Code Generator to work.</strong>
+            <p>Please enable JavaScript in your browser settings.</p>
+          </div>
+        `;
+        document.body.prepend(noscript);
+      });
+    </script>
+
+</body>
+</html>
