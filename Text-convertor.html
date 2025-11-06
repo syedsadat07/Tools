@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <title>Pro Text Tools — Smart, Fast, Beautiful</title>
+  <meta name="description" content="Professional online text tools: case converter, word/character count, trim, dedupe lines, sort, slugify, URL encode/decode, Base64, JSON pretty/minify, diff, and more. Light/dark theme, smooth UI, Adsterra-ready." />
+  <link rel="canonical" href="https://example.com/text-tools" />
+  <meta name="robots" content="index, follow" />
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Pro Text Tools — Smart, Fast, Beautiful" />
+  <meta property="og:description" content="Case convert, count, clean, sort, encode/decode, Base64, JSON tools, diff and more. Premium UI with light/dark mode." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://example.com/text-tools" />
+  <meta property="og:image" content="https://example.com/og-image.jpg" />
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Pro Text Tools — Smart, Fast, Beautiful" />
+  <meta name="twitter:description" content="Clean and convert text with beautiful, fast, accessible tools. Light/dark, keyboard-friendly." />
+  <meta name="twitter:image" content="https://example.com/og-image.jpg" />
+
+  <!-- JSON-LD Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Pro Text Tools",
+    "url": "https://example.com/text-tools",
+    "applicationCategory": "UtilitiesApplication",
+    "operatingSystem": "Any",
+    "description": "Text utilities including case conversion, counters, cleanup, encoding/decoding, Base64, JSON, and diff.",
+    "offers": {"@type": "Offer", "price": "0"}
+  }
+  </script>
+
+  <!-- README
+    - Single-file app. Open in any modern browser.
+    - Paste your Adsterra ad scripts into the two .ad-slot divs (top & bottom) below.
+    - Deploy easily on GitHub Pages (index.html at repo root).
+  -->
+
+  <style>
+    :root{
+      --bg:#0b1020; --bg-elev:#111834; --card:#0f1630; --text:#e7eaf6; --muted:#b9c0d9;
+      --primary:#6ea8fe; --primary-600:#5c9bff; --accent:#a7f3d0; --border:#22305c; --danger:#ef4444; --success:#22c55e;
+      --shadow:0 10px 28px rgba(0,0,0,.25); --radius:16px; --radius-sm:12px; --radius-lg:22px; --trans:180ms cubic-bezier(.2,.8,.2,1); --ring:0 0 0 3px rgba(110,168,254,.35);
+    }
+    .theme-light{
+      --bg:#f6f7fb; --bg-elev:#ffffff; --card:#ffffff; --text:#111827; --muted:#4b5563;
+      --primary:#2563eb; --primary-600:#1d4ed8; --accent:#10b981; --border:#e5e7eb; --danger:#dc2626; --success:#16a34a;
+      --shadow:0 10px 22px rgba(2,6,23,.06); --ring:0 0 0 3px rgba(37,99,235,.25);
+    }
+
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{margin:0;font:16px/1.6 system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial;background:linear-gradient(180deg,var(--bg),color-mix(in oklab,var(--bg),var(--bg-elev) 20%));color:var(--text);-webkit-font-smoothing:antialiased}
+    a{color:var(--primary)}
+    .container{width:min(1100px,96%);margin:0 auto;padding-inline:8px}
+
+    /* Ads */
+    .ad-slot{min-height:90px;display:grid;place-items:center;border:1px dashed var(--border);border-radius:12px;margin:12px 0 18px;background:color-mix(in oklab,var(--card),transparent 40%)}
+    .ad-slot small{color:var(--muted)}
+
+    header.site{position:sticky;top:0;z-index:50;background:color-mix(in oklab,var(--bg-elev),transparent 20%);backdrop-filter:saturate(1.2) blur(10px);border-bottom:1px solid var(--border)}
+    .nav{display:flex;align-items:center;justify-content:space-between;padding:10px 0}
+    .brand{display:flex;gap:10px;align-items:center}
+    .logo{width:36px;height:36px;border-radius:10px;display:grid;place-items:center;background:linear-gradient(135deg,var(--primary),var(--accent));box-shadow:var(--shadow);color:#0b1020;font-weight:800}
+    .brand h1{font-size:18px;margin:0}
+    .theme-toggle{border:1px solid var(--border);background:var(--card);color:var(--text);padding:8px 12px;border-radius:999px;display:flex;gap:8px;align-items:center;cursor:pointer;transition:transform var(--trans),background var(--trans)}
+    .theme-toggle:hover{transform:translateY(-1px)}
+    .theme-toggle:focus-visible{outline:none;box-shadow:var(--ring)}
+
+    .hero{display:grid;gap:10px;padding:22px 0 10px}
+    .hero h2{margin:0;font-size:clamp(26px,3vw,38px)}
+    .hero p{margin:0;color:var(--muted)}
+
+    .layout{display:grid;grid-template-columns:1fr;gap:16px;margin:14px 0 20px}
+
+    .card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden}
+    .card-head{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 14px;border-bottom:1px solid var(--border)}
+    .card-body{padding:14px}
+
+    .editor{display:grid;grid-template-columns:1fr;gap:12px}
+    .editor textarea{width:100%;min-height:240px;resize:vertical;border-radius:14px;border:1px solid var(--border);background:color-mix(in oklab,var(--bg-elev),transparent 10%);color:var(--text);padding:12px 14px;transition:border var(--trans),box-shadow var(--trans)}
+    .editor textarea:focus{outline:none;box-shadow:var(--ring)}
+
+    .toolbar{display:flex;flex-wrap:wrap;gap:8px}
+    .btn{display:inline-flex;align-items:center;gap:8px;padding:10px 12px;border:1px solid var(--border);border-radius:12px;background:transparent;color:var(--text);cursor:pointer;transition:transform var(--trans),background var(--trans),border var(--trans)}
+    .btn:hover{transform:translateY(-1px)}
+    .btn.primary{background:linear-gradient(135deg,var(--primary),var(--primary-600));border-color:transparent;color:white}
+    .btn.ghost{background:transparent}
+
+    .two-col{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    @media (max-width: 860px){.two-col{grid-template-columns:1fr}}
+
+    .muted{color:var(--muted)}
+    .kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-top:8px}
+    @media (max-width: 680px){.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}}
+    .kpi{padding:10px 12px;border:1px solid var(--border);border-radius:12px;background:color-mix(in oklab,var(--accent),transparent 92%)}
+
+    .result{border:1px solid var(--border);border-radius:14px;padding:10px 12px;background:color-mix(in oklab,var(--accent),transparent 94%)}
+
+    .toast{position:fixed;right:16px;bottom:16px;padding:12px 14px;border-radius:12px;background:var(--bg-elev);border:1px solid var(--border);box-shadow:var(--shadow);opacity:0;transform:translateY(10px);transition:opacity var(--trans),transform var(--trans)}
+    .toast.show{opacity:1;transform:translateY(0)}
+
+    /* Mobile polish */
+    @media (max-width:520px){.ad-slot{min-height:60px}.btn{width:100%}.toolbar{gap:6px}}
+    input,select,button{font-size:16px}
+  </style>
+</head>
+<body>
+  <a class="skip" href="#main" style="position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden;">Skip to content</a>
+
+  <div class="container">
+    <!-- ======= ADSTERRA: TOP BANNER (PASTE YOUR ADSTERAA CODE BELOW) ======= -->
+    <div id="adsterra-top" class="ad-slot" aria-label="Advertisement" role="complementary">
+      <!-- PASTE YOUR ADSTERAA SCRIPT HERE -->
+      <!-- Example: <script async src="https://example.adsterra.com/your-tag.js"></script> -->
+      <small>Ad Slot (Top)</small>
+    </div>
+    <!-- ======= /ADSTERRA: TOP BANNER ======= -->
+  </div>
+
+  <header class="site">
+    <div class="container nav">
+      <div class="brand"><div class="logo">Aa</div><h1>Pro Text Tools</h1></div>
+      <button id="themeToggle" class="theme-toggle" aria-pressed="false" aria-label="Toggle theme"><span aria-hidden="true">🌞/🌙</span><span class="muted">Theme</span></button>
+    </div>
+  </header>
+
+  <main id="main" class="container" style="padding-bottom:10px">
+    <section class="hero" aria-labelledby="hero-title">
+      <h2 id="hero-title">Clean, convert & analyze text — instantly</h2>
+      <p>Case tools, counters, cleanup, encoding/decoding, JSON, Base64, diff and more. Smooth UI, keyboard-friendly, and accessible.</p>
+    </section>
+
+    <section class="layout">
+      <!-- Editor Card -->
+      <article class="card" aria-labelledby="editor-title">
+        <header class="card-head">
+          <h3 id="editor-title" style="margin:0">Editor</h3>
+          <div class="muted">Type or paste your text below</div>
+        </header>
+        <div class="card-body editor">
+          <textarea id="input" placeholder="Paste your text here..."></textarea>
+
+          <!-- Actions -->
+          <div class="toolbar" aria-label="Text actions">
+            <button class="btn" data-action="upper" title="UPPERCASE">UPPERCASE</button>
+            <button class="btn" data-action="lower" title="lowercase">lowercase</button>
+            <button class="btn" data-action="title" title="Title Case">Title Case</button>
+            <button class="btn" data-action="sentence" title="Sentence case">Sentence case</button>
+            <button class="btn" data-action="swap" title="Swap case">sWAP cASE</button>
+            <button class="btn" data-action="trim" title="Trim & collapse spaces">Trim + Collapse</button>
+            <button class="btn" data-action="dedupe" title="Remove duplicate lines">Dedupe Lines</button>
+            <button class="btn" data-action="sort-asc" title="Sort lines A→Z">Sort A→Z</button>
+            <button class="btn" data-action="sort-desc" title="Sort lines Z→A">Sort Z→A</button>
+            <button class="btn" data-action="reverse-lines" title="Reverse lines order">Reverse Lines</button>
+            <button class="btn" data-action="slug" title="Slugify">Slugify</button>
+            <button class="btn" data-action="url-enc" title="URL encode">URL Encode</button>
+            <button class="btn" data-action="url-dec" title="URL decode">URL Decode</button>
+            <button class="btn" data-action="b64-enc" title="Base64 encode">Base64 ⬆</button>
+            <button class="btn" data-action="b64-dec" title="Base64 decode">Base64 ⬇</button>
+            <button class="btn" data-action="json-pretty" title="JSON pretty print">JSON Pretty</button>
+            <button class="btn" data-action="json-min" title="JSON minify">JSON Minify</button>
+            <button class="btn" data-action="remove-lines" title="Remove empty lines">Remove Empty</button>
+            <button class="btn" data-action="keep-numbers" title="Keep only numbers">Keep Numbers</button>
+            <button class="btn" data-action="strip-numbers" title="Remove all digits">Remove Numbers</button>
+            <button class="btn" data-action="clear" title="Clear editor">Clear</button>
+            <button class="btn primary" data-action="copy" title="Copy to clipboard">Copy</button>
+            <button class="btn primary" data-action="download" title="Download .txt">Download</button>
+          </div>
+
+          <!-- KPIs -->
+          <div class="kpis" aria-label="Live statistics">
+            <div class="kpi"><strong id="kpi-chars">0</strong><div class="muted">Characters</div></div>
+            <div class="kpi"><strong id="kpi-words">0</strong><div class="muted">Words</div></div>
+            <div class="kpi"><strong id="kpi-lines">0</strong><div class="muted">Lines</div></div>
+            <div class="kpi"><strong id="kpi-reading">0 min</strong><div class="muted">Read time</div></div>
+          </div>
+        </div>
+      </article>
+
+      <!-- Utilities Card -->
+      <article class="card" aria-labelledby="utils-title">
+        <header class="card-head">
+          <h3 id="utils-title" style="margin:0">Find & Replace • Diff</h3>
+          <div class="muted">Power tools for quick transformations</div>
+        </header>
+        <div class="card-body">
+          <div class="two-col">
+            <div>
+              <label for="find" class="muted">Find</label>
+              <input id="find" class="input" type="text" placeholder="Text or RegExp (e.g., /foo/g)" style="width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:12px;background:color-mix(in oklab,var(--bg-elev),transparent 10%);color:var(--text)">
+            </div>
+            <div>
+              <label for="replace" class="muted">Replace</label>
+              <input id="replace" class="input" type="text" placeholder="Replacement" style="width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:12px;background:color-mix(in oklab,var(--bg-elev),transparent 10%);color:var(--text)">
+            </div>
+          </div>
+          <div class="toolbar" style="margin-top:10px">
+            <button class="btn" data-action="find-replace">Run Replace</button>
+            <button class="btn" data-action="highlight">Highlight Matches</button>
+          </div>
+
+          <div class="two-col" style="margin-top:12px">
+            <div>
+              <label class="muted" for="diff-a">Diff — Text A</label>
+              <textarea id="diff-a" placeholder="Original text..." style="min-height:120px"></textarea>
+            </div>
+            <div>
+              <label class="muted" for="diff-b">Diff — Text B</label>
+              <textarea id="diff-b" placeholder="Changed text..." style="min-height:120px"></textarea>
+            </div>
+          </div>
+          <div class="toolbar" style="margin-top:10px">
+            <button class="btn" data-action="diff">Compute Diff</button>
+          </div>
+          <div id="diff-result" class="result" aria-live="polite" style="margin-top:10px">Diff result will appear here.</div>
+        </div>
+      </article>
+    </section>
+
+    <footer class="muted" style="margin:8px 0 14px">Tip: press <kbd>Ctrl/Cmd + Enter</kbd> to copy; <kbd>Ctrl/Cmd + K</kbd> to clear.</footer>
+  </main>
+
+  <div class="container">
+    <!-- ======= ADSTERRA: BOTTOM BANNER (PASTE YOUR ADSTERAA CODE BELOW) ======= -->
+    <div id="adsterra-bottom" class="ad-slot" aria-label="Advertisement" role="complementary">
+      <!-- PASTE YOUR ADSTERAA SCRIPT HERE -->
+      <!-- Example: <script async src="https://example.adsterra.com/your-tag.js"></script> -->
+      <small>Ad Slot (Bottom)</small>
+    </div>
+    <!-- ======= /ADSTERRA: BOTTOM BANNER ======= -->
+  </div>
+
+  <div id="toast" class="toast" role="status" aria-live="polite" aria-atomic="true"></div>
+
+  <script>
+    // Utilities
+    const $ = (sel, root=document) => root.querySelector(sel);
+    const $$ = (sel, root=document) => Array.from(root.querySelectorAll(sel));
+    const debounce = (fn, d=120) => { let t; return (...a)=>{ clearTimeout(t); t=setTimeout(()=>fn(...a), d); } };
+
+    // Theme
+    const THEME_KEY = 'ptt-theme';
+    const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    function applyTheme(theme){ document.body.classList.toggle('theme-light', theme==='light' || (theme==='system' && !prefersDark)); localStorage.setItem(THEME_KEY, theme); }
+    function initTheme(){ const saved = localStorage.getItem(THEME_KEY)||'system'; applyTheme(saved); const btn=$('#themeToggle'); btn.addEventListener('click',()=>{ const cur=localStorage.getItem(THEME_KEY)||'system'; const next= cur==='light'?'dark':cur==='dark'?'system':'light'; applyTheme(next); btn.setAttribute('aria-pressed', String(next==='light')); toast('Theme: '+next); }); }
+
+    // Toast
+    function toast(msg){ const t=$('#toast'); t.textContent=msg; t.classList.add('show'); clearTimeout(t._h); t._h=setTimeout(()=>t.classList.remove('show'), 1600); }
+
+    // Stats
+    function updateKpis(){
+      const v = $('#input').value; const chars = v.length; const words = (v.trim().match(/\S+/g)||[]).length; const lines = v.split(/\r?\n/).length; const reading = Math.max(1, Math.round(words/200));
+      $('#kpi-chars').textContent = chars; $('#kpi-words').textContent = words; $('#kpi-lines').textContent = lines; $('#kpi-reading').textContent = reading+ ' min';
+    }
+
+    // Actions map
+    const actions = {
+      upper: v => v.toUpperCase(),
+      lower: v => v.toLowerCase(),
+      title: v => v.toLowerCase().replace(/\b([a-z])/g, m=>m.toUpperCase()),
+      sentence: v => v.toLowerCase().replace(/(^\s*[a-z])|([.!?]\s*[a-z])/g, m=>m.toUpperCase()),
+      swap: v => v.replace(/[a-zA-Z]/g, c => c === c.toLowerCase() ? c.toUpperCase() : c.toLowerCase()),
+      trim: v => v.replace(/\s+/g,' ').trim(),
+      'remove-lines': v => v.split(/\r?\n/).filter(l=>l.trim()!=='').join('\n'),
+      'reverse-lines': v => v.split(/\r?\n/).reverse().join('\n'),
+      'sort-asc': v => v.split(/\r?\n/).sort((a,b)=>a.localeCompare(b)).join('\n'),
+      'sort-desc': v => v.split(/\r?\n/).sort((a,b)=>b.localeCompare(a)).join('\n'),
+      dedupe: v => Array.from(new Set(v.split(/\r?\n/))).join('\n'),
+      slug: v => v.normalize('NFKD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'').slice(0,120),
+      'url-enc': v => encodeURIComponent(v),
+      'url-dec': v => { try{return decodeURIComponent(v)}catch{return v} },
+      'b64-enc': v => btoa(unescape(encodeURIComponent(v))),
+      'b64-dec': v => { try{return decodeURIComponent(escape(atob(v)))}catch{return v} },
+      'json-pretty': v => { try{ return JSON.stringify(JSON.parse(v), null, 2) }catch{ toast('Invalid JSON'); return v } },
+      'json-min': v => { try{ return JSON.stringify(JSON.parse(v)) }catch{ toast('Invalid JSON'); return v } },
+      'keep-numbers': v => (v.match(/\d+/g)||[]).join(' '),
+      'strip-numbers': v => v.replace(/\d+/g,'') ,
+      clear: _ => ''
+    };
+
+    function run(action){
+      const el = $('#input'); const start = el.selectionStart, end = el.selectionEnd; const sel = start!==end ? el.value.slice(start,end) : null;
+      const target = sel ?? el.value; const fn = actions[action]; if(!fn) return;
+      const out = fn(target);
+      if(sel!=null){ el.setRangeText(out, start, end, 'end'); }
+      else { el.value = out; }
+      updateKpis(); toast(action.replace(/-/g,' ').toUpperCase()+" done");
+    }
+
+    // Find/Replace & highlight
+    function toRegex(input){
+      if(/^\/.+\/[gimsuy]*$/.test(input)){ const m=input.match(/^\/(.+)\/([gimsuy]*)$/); try{return new RegExp(m[1], m[2])}catch{} }
+      return new RegExp(input.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'), 'g');
+    }
+    function findReplace(){ const f=$('#find').value; if(!f){toast('Find is empty');return} const r=$('#replace').value; const re=toRegex(f); const el=$('#input'); el.value = el.value.replace(re,r); updateKpis(); toast('Replaced'); }
+    function highlightMatches(){ const f=$('#find').value; if(!f){toast('Find is empty');return}
+      const re = toRegex(f); const v = $('#input').value; const html = v.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(re, m=>`<mark>${m}</mark>`);
+      const preview = document.createElement('div'); preview.className='result'; preview.style.marginTop='10px'; preview.innerHTML = html || '<span class="muted">No text</span>';
+      const body = document.createElement('div'); body.appendChild(preview); const dlg = modal('Highlights', body); dlg.open();
+    }
+
+    // Diff (simple LCS by lines)
+    function diffLines(a,b){ const A=a.split(/\r?\n/), B=b.split(/\r?\n/); const n=A.length, m=B.length; const dp=Array(n+1).fill(0).map(()=>Array(m+1).fill(0)); for(let i=n-1;i>=0;i--){ for(let j=m-1;j>=0;j--){ dp[i][j] = A[i]===B[j] ? dp[i+1][j+1]+1 : Math.max(dp[i+1][j], dp[i][j+1]); } } let i=0,j=0, out=[]; while(i<n && j<m){ if(A[i]===B[j]){ out.push({type:'same', text:A[i++]}); j++; } else if(dp[i+1][j]>=dp[i][j+1]){ out.push({type:'del', text:A[i++]}); } else { out.push({type:'add', text:B[j++]}); } } while(i<n) out.push({type:'del', text:A[i++]}); while(j<m) out.push({type:'add', text:B[j++]}); return out; }
+    function renderDiff(){ const a=$('#diff-a').value, b=$('#diff-b').value; const parts = diffLines(a,b).map(p=>{
+        if(p.type==='same') return `<div> ${escapeHtml(p.text)} </div>`;
+        if(p.type==='add') return `<div style="background:rgba(34,197,94,.15);border-left:3px solid var(--success);padding-left:6px">+ ${escapeHtml(p.text)}</div>`;
+        return `<div style="background:rgba(239,68,68,.15);border-left:3px solid var(--danger);padding-left:6px">− ${escapeHtml(p.text)}</div>`;
+      }).join('');
+      $('#diff-result').innerHTML = parts || '<span class="muted">No differences</span>';
+    }
+
+    // Helpers
+    function escapeHtml(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+    // Modal
+    function modal(title, content){
+      const wrap = document.createElement('div'); wrap.style.position='fixed'; wrap.style.inset='0'; wrap.style.background='rgba(0,0,0,.35)'; wrap.style.display='grid'; wrap.style.placeItems='center'; wrap.style.zIndex='60'; wrap.style.opacity='0'; wrap.style.transition='opacity var(--trans)';
+      const box = document.createElement('div'); box.style.background='var(--card)'; box.style.color='var(--text)'; box.style.border='1px solid var(--border)'; box.style.borderRadius='14px'; box.style.boxShadow='var(--shadow)'; box.style.maxWidth='min(800px, 92vw)'; box.style.maxHeight='80vh'; box.style.overflow='auto';
+      const head = document.createElement('div'); head.className='card-head'; head.innerHTML = `<strong>${title}</strong>`; const body = document.createElement('div'); body.className='card-body'; body.appendChild(content);
+      const close = document.createElement('button'); close.className='btn'; close.textContent='Close'; close.style.margin='10px 14px 14px'; close.addEventListener('click', closeModal);
+      box.appendChild(head); box.appendChild(body); box.appendChild(close); wrap.appendChild(box);
+      function closeModal(){ wrap.style.opacity='0'; setTimeout(()=>document.body.removeChild(wrap), 180); }
+      return { open(){ document.body.appendChild(wrap); requestAnimationFrame(()=> wrap.style.opacity='1'); } };
+    }
+
+    // Clipboard/Download/Shortcuts
+    function copyAll(){ const v=$('#input').value; if(!v){toast('Nothing to copy'); return} navigator.clipboard.writeText(v).then(()=>toast('Copied')); }
+    function downloadTxt(){ const v=$('#input').value; const a=document.createElement('a'); a.href=URL.createObjectURL(new Blob([v],{type:'text/plain'})); a.download='text.txt'; a.click(); URL.revokeObjectURL(a.href); }
+
+    // Wire up
+    function init(){
+      initTheme();
+      $('#input').addEventListener('input', debounce(updateKpis, 60)); updateKpis();
+      $$('.toolbar .btn').forEach(b=> b.addEventListener('click', e=>{ const a=e.currentTarget.getAttribute('data-action'); if(a==='copy') return copyAll(); if(a==='download') return downloadTxt(); run(a); }));
+      $('[data-action="find-replace"]').addEventListener('click', findReplace);
+      $('[data-action="highlight"]').addEventListener('click', highlightMatches);
+      $('[data-action="diff"]').addEventListener('click', renderDiff);
+      document.addEventListener('keydown', e=>{
+        if((e.ctrlKey||e.metaKey) && e.key==='Enter'){ e.preventDefault(); copyAll(); }
+        if((e.ctrlKey||e.metaKey) && (e.key==='k'||e.key==='K')){ e.preventDefault(); run('clear'); }
+      });
+    }
+
+    // Start
+    init();
+  </script>
+</body>
+</html>
