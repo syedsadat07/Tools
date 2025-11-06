@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <title>Universal Unit Converter — Fast, Accurate, Beautiful</title>
+  <meta name="description" content="Convert length, weight, temperature, volume, area, speed, time, and data with instant results. Beautiful UI, light/dark themes, and Adsterra-ready." />
+  <link rel="canonical" href="https://example.com/unit-converter" />
+  <meta name="robots" content="index, follow" />
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Universal Unit Converter — Fast, Accurate, Beautiful" />
+  <meta property="og:description" content="Instant conversions for length, weight, temperature, and more. Premium design with light/dark themes." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://example.com/unit-converter" />
+  <meta property="og:image" content="https://example.com/og-image.jpg" />
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Universal Unit Converter — Fast, Accurate, Beautiful" />
+  <meta name="twitter:description" content="Instant conversions for length, weight, temperature, and more. Premium design with light/dark themes." />
+  <meta name="twitter:image" content="https://example.com/og-image.jpg" />
+
+  <!-- JSON-LD Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Universal Unit Converter",
+    "url": "https://example.com/unit-converter",
+    "applicationCategory": "UtilitiesApplication",
+    "operatingSystem": "Any",
+    "description": "Convert between common units: length, mass, temperature, volume, area, speed, time, data.",
+    "offers": {"@type": "Offer", "price": "0"}
+  }
+  </script>
+
+  <!--
+    README (quick start)
+    - Open this file in any modern browser. No build needed.
+    - Paste your Adsterra ad scripts inside the two ad-slot containers below.
+    - To deploy on GitHub Pages: push this file to a repo and enable Pages.
+  -->
+
+  <style>
+    /* =====================
+       CSS VARIABLES & RESET
+       ===================== */
+    :root {
+      --bg: #0b1020;
+      --bg-elev: #111834;
+      --text: #e7eaf6;
+      --muted: #b9c0d9;
+      --primary: #6ea8fe;
+      --primary-600: #5c9bff;
+      --accent: #c1fba4;
+      --danger: #ff6b6b;
+      --success: #22c55e;
+      --card: #0f1630;
+      --border: #22305c;
+      --shadow: 0 10px 30px rgba(0,0,0,.25);
+      --radius: 16px;
+      --radius-sm: 12px;
+      --radius-lg: 24px;
+      --pad: 18px;
+      --trans: 180ms cubic-bezier(.2,.8,.2,1);
+      --ring: 0 0 0 3px rgba(110,168,254,.35);
+    }
+
+    .theme-light {
+      --bg: #f6f7fb;
+      --bg-elev: #ffffff;
+      --text: #111827;
+      --muted: #4b5563;
+      --primary: #2563eb;
+      --primary-600: #1d4ed8;
+      --accent: #10b981;
+      --danger: #ef4444;
+      --success: #16a34a;
+      --card: #ffffff;
+      --border: #e5e7eb;
+      --shadow: 0 10px 25px rgba(2,6,23,.06);
+      --ring: 0 0 0 3px rgba(37,99,235,.25);
+    }
+
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      font: 16px/1.6 system-ui, -apple-system, Segoe UI, Roboto, Inter, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji";
+      background: linear-gradient(180deg, var(--bg) 0%, color-mix(in oklab, var(--bg), var(--bg-elev) 20%) 100%);
+      color: var(--text);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+    img { max-width: 100%; display: block; }
+    a { color: var(--primary); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    /* Layout */
+    .container { width: min(1100px, 96%); margin: 0 auto; }
+
+    /* Top Banner Ad – reserve space to prevent CLS */
+    .ad-slot { min-height: 90px; display: grid; place-items: center; border: 1px dashed var(--border); border-radius: var(--radius-sm); margin: 12px 0 18px; background: color-mix(in oklab, var(--card), transparent 40%); }
+    .ad-slot small { color: var(--muted); }
+
+    header.site {
+      position: sticky; top: 0; z-index: 50;
+      backdrop-filter: saturate(1.2) blur(10px);
+      background: color-mix(in oklab, var(--bg-elev), transparent 25%);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-wrap { display:flex; align-items:center; justify-content:space-between; padding: 10px 0; }
+    .brand { display:flex; gap:10px; align-items:center; }
+    .logo { width:36px; height:36px; border-radius:10px; display:grid; place-items:center; background: linear-gradient(135deg, var(--primary), var(--accent)); box-shadow: var(--shadow); color:#0b1020; font-weight:800; }
+    .brand h1 { font-size: 18px; margin:0; letter-spacing:.3px; }
+
+    .theme-toggle {
+      border: 1px solid var(--border);
+      background: var(--card);
+      color: var(--text);
+      padding: 8px 12px;
+      border-radius: 999px;
+      display:flex; gap:8px; align-items:center;
+      cursor:pointer; transition: transform var(--trans), background var(--trans), border var(--trans);
+    }
+    .theme-toggle:focus-visible { outline: none; box-shadow: var(--ring); }
+    .theme-toggle:hover { transform: translateY(-1px); }
+
+    /* Hero */
+    .hero { display:grid; gap:14px; padding: 22px 0 8px; }
+    .hero h2 { font-size: clamp(26px, 3vw, 38px); margin: 0; }
+    .hero p { color: var(--muted); margin: 0; }
+
+    /* Tabs / Sidebar */
+    .panel {
+      display:grid; grid-template-columns: 260px 1fr; gap: 18px; align-items:start; margin: 18px 0 24px;
+    }
+    @media (max-width: 900px){ .panel { grid-template-columns: 1fr; } }
+
+    .tabs { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 10px; box-shadow: var(--shadow); position: sticky; top: calc(60px + 10px); }
+    .tab-btn { width:100%; text-align:left; background: transparent; color: var(--text); border: 1px solid transparent; padding: 10px 12px; border-radius: 12px; cursor:pointer; transition: background var(--trans), transform var(--trans); }
+    .tab-btn[aria-selected="true"] { background: color-mix(in oklab, var(--primary), transparent 90%); border-color: color-mix(in oklab, var(--primary), transparent 70%); }
+    .tab-btn:hover { transform: translateX(2px); }
+
+    /* Converter Card */
+    .card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius-lg); box-shadow: var(--shadow); padding: clamp(14px, 2.2vw, 22px); overflow:hidden; }
+    .card-header { display:flex; flex-wrap:wrap; gap:10px; align-items:center; justify-content:space-between; margin-bottom: 12px; }
+    .card h3 { margin: 0; font-size: clamp(20px, 2.2vw, 24px); }
+    .muted { color: var(--muted); }
+
+    .grid { display:grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 14px; }
+    @media (max-width: 700px){ .grid { grid-template-columns: 1fr; } }
+
+    label { font-weight: 600; font-size: 13px; color: var(--muted); }
+    .input, select, .btn { width: 100%; padding: 12px 14px; border-radius: 12px; border: 1px solid var(--border); background: color-mix(in oklab, var(--bg-elev), transparent 10%); color: var(--text); transition: border var(--trans), box-shadow var(--trans), transform var(--trans), background var(--trans); }
+    .input:focus, select:focus { outline: none; box-shadow: var(--ring); }
+
+    .row { display:grid; gap:6px; }
+
+    .row-inline { display:flex; gap:10px; align-items:end; }
+    .row-inline .btn { width:auto; }
+
+    .btn { display:inline-flex; align-items:center; justify-content:center; gap:8px; cursor:pointer; user-select:none; }
+    .btn.primary { background: linear-gradient(135deg, var(--primary), var(--primary-600)); border-color: transparent; color: white; }
+    .btn.ghost { background: transparent; }
+    .btn:hover { transform: translateY(-1px); }
+    .btn:active { transform: translateY(0); }
+
+    .result {
+      display:grid; gap:6px; padding: 12px; border-radius: 14px; border:1px solid var(--border);
+      background: color-mix(in oklab, var(--accent), transparent 94%);
+    }
+
+    .toast { position: fixed; right: 16px; bottom: 16px; padding: 12px 14px; border-radius: 12px; background: var(--bg-elev); border: 1px solid var(--border); box-shadow: var(--shadow); opacity: 0; transform: translateY(10px); transition: opacity var(--trans), transform var(--trans); }
+    .toast.show { opacity: 1; transform: translateY(0); }
+
+    /* Transitions */
+    .fade-enter { opacity: 0; transform: translateY(6px); }
+    .fade-enter-active { opacity: 1; transform: translateY(0); transition: opacity var(--trans), transform var(--trans); }
+
+    /* Reduced motion */
+    @media (prefers-reduced-motion: reduce){
+      * { transition: none !important; animation: none !important; }
+    }
+
+    footer { margin: 20px 0; color: var(--muted); }
+  
+    /* =====================
+       RESPONSIVE ENHANCEMENTS
+       ===================== */
+    /* Make tabs behave like scrollable chips on mobile */
+    .tabs { display: flex; flex-direction: column; gap: 6px; }
+    @media (max-width: 900px){
+      .tabs { position: relative; top: auto; flex-direction: row; gap: 8px; padding: 8px; overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+      .tabs::-webkit-scrollbar{ display: none; }
+      .tab-btn { flex: 0 0 auto; white-space: nowrap; }
+    }
+
+    /* Panel spacing tweaks */
+    @media (max-width: 900px){ .panel { gap: 12px; margin: 10px 0 18px; } }
+
+    /* Make action buttons stack on small screens */
+    @media (max-width: 520px){
+      .row-inline { flex-direction: column; align-items: stretch; }
+      .row-inline .btn { width: 100%; }
+      .ad-slot { min-height: 60px; }
+      .card { padding: 14px; }
+    }
+
+    @media (max-width: 380px){
+      .brand h1 { font-size: 16px; }
+      .hero h2 { font-size: clamp(22px, 6vw, 28px); }
+    }
+
+    /* Prevent iOS zoom on inputs */
+    input, select, button { font-size: 16px; }
+
+    /* Make selects and inputs more tappable */
+    .input, select { min-height: 44px; }
+
+    /* Ensure containers don't touch edges */
+    .container { padding-left: 8px; padding-right: 8px; }
+
+    /* Improve focus ring visibility on dark backgrounds */
+    .input:focus, select:focus, .btn:focus-visible { outline: none; box-shadow: var(--ring); }
+
+  </style>
+</head>
+<body>
+  <a class="skip" href="#main" style="position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden;">Skip to content</a>
+
+  <div class="container">
+    <!-- ======= ADSTERRA: TOP BANNER (PASTE YOUR ADSTERAA CODE BELOW) ======= -->
+    <div id="adsterra-top" class="ad-slot" aria-label="Advertisement" role="complementary">
+      <!-- PASTE YOUR ADSTERAA SCRIPT HERE -->
+      <!-- Example: <script async src="https://example.adsterra.com/your-tag.js"></script> -->
+      <small>Ad Slot (Top)</small>
+    </div>
+    <!-- ======= /ADSTERRA: TOP BANNER ======= -->
+  </div>
+
+  <header class="site">
+    <div class="container nav-wrap">
+      <div class="brand" aria-label="Site brand">
+        <div class="logo" aria-hidden="true">↔︎</div>
+        <h1>Universal Unit Converter</h1>
+      </div>
+      <button id="themeToggle" class="theme-toggle" aria-pressed="false" aria-label="Toggle theme">
+        <span aria-hidden="true">🌞/🌙</span>
+        <span class="muted">Theme</span>
+      </button>
+    </div>
+  </header>
+
+  <main id="main" class="container" style="padding-bottom: 10px;">
+    <section class="hero" aria-labelledby="hero-title">
+      <h2 id="hero-title">Fast, accurate conversions—beautifully done</h2>
+      <p>Length, weight, temperature, volume, area, speed, time, and data. Live results, keyboard friendly, and accessible.</p>
+    </section>
+
+    <section class="panel" aria-label="Converter">
+      <nav class="tabs" aria-label="Categories" role="tablist" id="tablist">
+        <!-- Tabs will be injected here -->
+      </nav>
+
+      <section id="converter" class="card" role="tabpanel" aria-live="off">
+        <header class="card-header">
+          <h3 id="panelTitle">Converter</h3>
+          <div class="muted" id="categoryHint">Choose a category</div>
+        </header>
+
+        <div class="grid" id="formGrid" hidden>
+          <div class="row">
+            <label for="inputValue">Value</label>
+            <input id="inputValue" class="input" type="text" inputmode="decimal" placeholder="Enter a number" autocomplete="off" />
+          </div>
+
+          <div class="row">
+            <label for="precision">Precision</label>
+            <select id="precision">
+              <option value="2">2 digits</option>
+              <option value="4">4 digits</option>
+              <option value="6" selected>6 digits</option>
+              <option value="8">8 digits</option>
+              <option value="12">12 digits</option>
+            </select>
+          </div>
+
+          <div class="row">
+            <label for="fromUnit">From</label>
+            <select id="fromUnit"></select>
+          </div>
+
+          <div class="row">
+            <label for="toUnit">To</label>
+            <select id="toUnit"></select>
+          </div>
+
+          <div class="row-inline">
+            <button id="swapBtn" class="btn ghost" type="button" aria-label="Swap units">🔁 Swap</button>
+            <button id="copyBtn" class="btn primary" type="button" aria-label="Copy result">📋 Copy Result</button>
+          </div>
+
+          <div class="row" style="grid-column: 1 / -1;">
+            <div class="result" aria-live="polite" aria-atomic="true">
+              <div><strong>Result:</strong> <span id="resultValue">—</span></div>
+              <div class="muted" id="resultDetail"></div>
+            </div>
+            <span id="sr-result" class="visually-hidden" aria-live="polite"></span>
+          </div>
+        </div>
+      </section>
+    </section>
+
+    <footer>
+      <p>Made with care for accuracy and accessibility. Tip: press <kbd>Tab</kbd> to jump across controls.</p>
+    </footer>
+  </main>
+
+  <div class="container">
+    <!-- ======= ADSTERRA: BOTTOM BANNER (PASTE YOUR ADSTERAA CODE BELOW) ======= -->
+    <div id="adsterra-bottom" class="ad-slot" aria-label="Advertisement" role="complementary">
+      <!-- PASTE YOUR ADSTERAA SCRIPT HERE -->
+      <!-- Example: <script async src="https://example.adsterra.com/your-tag.js"></script> -->
+      <small>Ad Slot (Bottom)</small>
+    </div>
+    <!-- ======= /ADSTERRA: BOTTOM BANNER ======= -->
+  </div>
+
+  <div id="toast" class="toast" role="status" aria-live="polite" aria-atomic="true"></div>
+
+  <script>
+    // =====================
+    // Utility: Debounce
+    // =====================
+    function debounce(fn, delay = 120){
+      let t; return (...args)=>{ clearTimeout(t); t = setTimeout(()=>fn(...args), delay); };
+    }
+
+    // =====================
+    // Theme Management
+    // =====================
+    const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const root = document.documentElement;
+    const THEME_KEY = 'uuc-theme';
+    function applyTheme(theme){
+      const isLight = theme === 'light' || (theme === 'system' && !prefersDark);
+      document.body.classList.toggle('theme-light', isLight);
+      localStorage.setItem(THEME_KEY, theme);
+    }
+    function initTheme(){
+      const saved = localStorage.getItem(THEME_KEY) || 'system';
+      applyTheme(saved);
+      const btn = document.getElementById('themeToggle');
+      btn.addEventListener('click', ()=>{
+        const current = localStorage.getItem(THEME_KEY) || 'system';
+        const next = current === 'light' ? 'dark' : current === 'dark' ? 'system' : 'light';
+        applyTheme(next);
+        btn.setAttribute('aria-pressed', String(next === 'light'));
+        toast(`Theme: ${next}`);
+      });
+    }
+
+    // =====================
+    // Conversion Engine
+    // =====================
+    const CATEGORIES = {
+      length: {
+        label: 'Length', base: 'm', units: {
+          m: { label:'meter (m)', toBase: v=>v, fromBase: v=>v },
+          cm:{ label:'centimeter (cm)', toBase: v=>v/100, fromBase: v=>v*100 },
+          mm:{ label:'millimeter (mm)', toBase: v=>v/1000, fromBase: v=>v*1000 },
+          km:{ label:'kilometer (km)', toBase: v=>v*1000, fromBase: v=>v/1000 },
+          in:{ label:'inch (in)', toBase: v=>v*0.0254, fromBase: v=>v/0.0254 },
+          ft:{ label:'foot (ft)', toBase: v=>v*0.3048, fromBase: v=>v/0.3048 },
+          yd:{ label:'yard (yd)', toBase: v=>v*0.9144, fromBase: v=>v/0.9144 },
+          mi:{ label:'mile (mi)', toBase: v=>v*1609.344, fromBase: v=>v/1609.344 },
+        }} ,
+      mass: {
+        label: 'Weight (Mass)', base: 'kg', units: {
+          kg:{ label:'kilogram (kg)', toBase:v=>v, fromBase:v=>v },
+          g: { label:'gram (g)', toBase:v=>v/1000, fromBase:v=>v*1000 },
+          mg:{ label:'milligram (mg)', toBase:v=>v/1e6, fromBase:v=>v*1e6 },
+          lb:{ label:'pound (lb)', toBase:v=>v*0.45359237, fromBase:v=>v/0.45359237 },
+          oz:{ label:'ounce (oz)', toBase:v=>v*0.028349523125, fromBase:v=>v/0.028349523125 },
+          t: { label:'tonne (t)', toBase:v=>v*1000, fromBase:v=>v/1000 },
+        }} ,
+      temperature: {
+        label: 'Temperature', base: 'K', units: {
+          C: { label:'Celsius (°C)', toBase:v=>v+273.15, fromBase:v=>v-273.15 },
+          F: { label:'Fahrenheit (°F)', toBase:v=> (v-32)*5/9 + 273.15, fromBase:v=> (v-273.15)*9/5 + 32 },
+          K: { label:'Kelvin (K)', toBase:v=>v, fromBase:v=>v },
+        }} ,
+      volume: {
+        label: 'Volume', base: 'L', units: {
+          L:  { label:'liter (L)', toBase:v=>v, fromBase:v=>v },
+          mL: { label:'milliliter (mL)', toBase:v=>v/1000, fromBase:v=>v*1000 },
+          tsp:{ label:'teaspoon (tsp, US)', toBase:v=>v*0.00492892159375, fromBase:v=>v/0.00492892159375 },
+          tbsp:{label:'tablespoon (tbsp, US)', toBase:v=>v*0.01478676478125, fromBase:v=>v/0.01478676478125 },
+          floz:{label:'fluid ounce (fl oz, US)', toBase:v=>v*0.0295735295625, fromBase:v=>v/0.0295735295625 },
+          cup:{ label:'cup (US)', toBase:v=>v*0.2365882365, fromBase:v=>v/0.2365882365 },
+          pt: { label:'pint (US)', toBase:v=>v*0.473176473, fromBase:v=>v/0.473176473 },
+          qt: { label:'quart (US)', toBase:v=>v*0.946352946, fromBase:v=>v/0.946352946 },
+          gal:{ label:'gallon (US)', toBase:v=>v*3.785411784, fromBase:v=>v/3.785411784 },
+        }} ,
+      area: {
+        label: 'Area', base: 'm²', units: {
+          'm²': { label:'square meter (m²)', toBase:v=>v, fromBase:v=>v },
+          'cm²':{ label:'square centimeter (cm²)', toBase:v=>v/10000, fromBase:v=>v*10000 },
+          'ft²':{ label:'square foot (ft²)', toBase:v=>v*0.09290304, fromBase:v=>v/0.09290304 },
+          'yd²':{ label:'square yard (yd²)', toBase:v=>v*0.83612736, fromBase:v=>v/0.83612736 },
+          acre: { label:'acre', toBase:v=>v*4046.8564224, fromBase:v=>v/4046.8564224 },
+          ha:   { label:'hectare (ha)', toBase:v=>v*10000, fromBase:v=>v/10000 },
+        }} ,
+      speed: {
+        label: 'Speed', base: 'm/s', units: {
+          'm/s': { label:'meter per second (m/s)', toBase:v=>v, fromBase:v=>v },
+          'km/h':{ label:'kilometer per hour (km/h)', toBase:v=>v/3.6, fromBase:v=>v*3.6 },
+          mph:   { label:'mile per hour (mph)', toBase:v=>v*0.44704, fromBase:v=>v/0.44704 },
+          knot:  { label:'knot (kn)', toBase:v=>v*0.514444, fromBase:v=>v/0.514444 },
+        }} ,
+      time: {
+        label: 'Time', base: 's', units: {
+          ms: { label:'millisecond (ms)', toBase:v=>v/1000, fromBase:v=>v*1000 },
+          s:  { label:'second (s)', toBase:v=>v, fromBase:v=>v },
+          min:{ label:'minute (min)', toBase:v=>v*60, fromBase:v=>v/60 },
+          h:  { label:'hour (h)', toBase:v=>v*3600, fromBase:v=>v/3600 },
+          day:{ label:'day', toBase:v=>v*86400, fromBase:v=>v/86400 },
+          week:{label:'week', toBase:v=>v*604800, fromBase:v=>v/604800 },
+        }} ,
+      data: {
+        label: 'Data Size (base-10)', base: 'B', units: {
+          bit: { label:'bit (b)', toBase:v=>v/8, fromBase:v=>v*8 },
+          B:   { label:'byte (B)', toBase:v=>v, fromBase:v=>v },
+          KB:  { label:'kilobyte (KB, 10^3)', toBase:v=>v*1e3, fromBase:v=>v/1e3 },
+          MB:  { label:'megabyte (MB, 10^6)', toBase:v=>v*1e6, fromBase:v=>v/1e6 },
+          GB:  { label:'gigabyte (GB, 10^9)', toBase:v=>v*1e9, fromBase:v=>v/1e9 },
+          TB:  { label:'terabyte (TB, 10^12)', toBase:v=>v*1e12, fromBase:v=>v/1e12 },
+        }, note: 'Using decimal (SI) units. For binary (KiB, MiB) multiply by 1024 steps.'}
+    };
+
+    function convert(categoryKey, from, to, value){
+      const cat = CATEGORIES[categoryKey];
+      if(!cat) return { error:'Unknown category' };
+      const f = cat.units[from];
+      const t = cat.units[to];
+      if(!f || !t) return { error:'Unknown unit' };
+      const base = f.toBase(Number(value));
+      const out = t.fromBase(base);
+      return { result: out, baseUnit: cat.base };
+    }
+
+    // =====================
+    // UI & Behavior
+    // =====================
+    const tablist = document.getElementById('tablist');
+    const panelTitle = document.getElementById('panelTitle');
+    const categoryHint = document.getElementById('categoryHint');
+    const formGrid = document.getElementById('formGrid');
+    const inputValue = document.getElementById('inputValue');
+    const fromUnit = document.getElementById('fromUnit');
+    const toUnit = document.getElementById('toUnit');
+    const swapBtn = document.getElementById('swapBtn');
+    const copyBtn = document.getElementById('copyBtn');
+    const precisionEl = document.getElementById('precision');
+    const resultValue = document.getElementById('resultValue');
+    const resultDetail = document.getElementById('resultDetail');
+    const srResult = document.getElementById('sr-result');
+
+    let currentCategory = null;
+
+    function formatNumber(n, digits){
+      if(!isFinite(n)) return '—';
+      const abs = Math.abs(n);
+      // Switch to exponential for very large/small numbers to keep neat
+      if((abs !== 0 && (abs < 1e-6 || abs >= 1e9))){
+        return Number(n).toExponential(Math.max(1, digits-1));
+      }
+      return Number(n.toLocaleString(undefined, {maximumSignificantDigits: digits}));
+    }
+
+    function populateUnits(categoryKey){
+      const units = CATEGORIES[categoryKey].units;
+      const options = Object.entries(units).map(([key, meta])=>`<option value="${key}">${meta.label}</option>`).join('');
+      fromUnit.innerHTML = options;
+      toUnit.innerHTML = options;
+      // Smart defaults
+      const keys = Object.keys(units);
+      fromUnit.value = keys[0];
+      toUnit.value = keys[1] || keys[0];
+    }
+
+    function buildTabs(){
+      const frag = document.createDocumentFragment();
+      Object.entries(CATEGORIES).forEach(([key, cfg], idx)=>{
+        const btn = document.createElement('button');
+        btn.className = 'tab-btn';
+        btn.setAttribute('role', 'tab');
+        btn.setAttribute('id', `tab-${key}`);
+        btn.setAttribute('aria-controls', 'converter');
+        btn.textContent = cfg.label;
+        btn.addEventListener('click', ()=> selectCategory(key));
+        if(idx===0) btn.setAttribute('aria-selected','true');
+        frag.appendChild(btn);
+      });
+      tablist.appendChild(frag);
+    }
+
+    function selectCategory(key){
+      currentCategory = key;
+      Array.from(tablist.children).forEach(btn=>{
+        btn.setAttribute('aria-selected', String(btn.id === `tab-${key}`));
+      });
+      const cfg = CATEGORIES[key];
+      panelTitle.textContent = cfg.label;
+      categoryHint.textContent = cfg.note || `${cfg.label} — base: ${cfg.base}`;
+      formGrid.hidden = false;
+      populateUnits(key);
+      animateIn(formGrid);
+      triggerConvert();
+      // Update hash for deep link
+      history.replaceState(null, '', `#${key}`);
+    }
+
+    function animateIn(el){
+      el.classList.add('fade-enter');
+      requestAnimationFrame(()=>{
+        el.classList.add('fade-enter-active');
+        el.classList.remove('fade-enter');
+        setTimeout(()=> el.classList.remove('fade-enter-active'), 220);
+      });
+    }
+
+    function sanitizeNumber(str){
+      // Allow digits, sign, decimal, exponent
+      const cleaned = str.replace(/[^0-9eE+\-\.]/g, '');
+      // Handle multiple dots or signs crudely by keeping first valid pattern
+      return cleaned;
+    }
+
+    const doConvert = ()=>{
+      const valRaw = sanitizeNumber(inputValue.value.trim());
+      if(valRaw !== inputValue.value) inputValue.value = valRaw; // reflect sanitization
+      const val = parseFloat(valRaw);
+      if(isNaN(val)){
+        resultValue.textContent = '—';
+        resultDetail.textContent = 'Enter a number to see the result.';
+        return;
+      }
+      const p = parseInt(precisionEl.value, 10) || 6;
+      const { result } = convert(currentCategory, fromUnit.value, toUnit.value, val);
+      const formatted = formatNumber(result, p);
+      resultValue.textContent = formatted;
+      resultDetail.textContent = `${valRaw} ${CATEGORIES[currentCategory].units[fromUnit.value].label} → ${CATEGORIES[currentCategory].units[toUnit.value].label}`;
+      srResult.textContent = `Result ${formatted}`;
+    };
+
+    const triggerConvert = debounce(doConvert, 80);
+
+    function attachEvents(){
+      inputValue.addEventListener('input', triggerConvert);
+      fromUnit.addEventListener('change', triggerConvert);
+      toUnit.addEventListener('change', triggerConvert);
+      precisionEl.addEventListener('change', triggerConvert);
+      swapBtn.addEventListener('click', ()=>{
+        const a = fromUnit.value; fromUnit.value = toUnit.value; toUnit.value = a; triggerConvert();
+      });
+      copyBtn.addEventListener('click', async ()=>{
+        const txt = resultValue.textContent.trim();
+        if(!txt || txt==='—'){ toast('Nothing to copy'); return; }
+        try { await navigator.clipboard.writeText(txt); toast('Result copied'); }
+        catch { toast('Copy failed'); }
+      });
+      // Deep-link routing
+      window.addEventListener('hashchange', ()=>{
+        const key = location.hash.replace('#','');
+        if(CATEGORIES[key]) selectCategory(key);
+      });
+    }
+
+    function toast(msg){
+      const t = document.getElementById('toast');
+      t.textContent = msg; t.classList.add('show');
+      clearTimeout(t._hide);
+      t._hide = setTimeout(()=> t.classList.remove('show'), 1600);
+    }
+
+    // Init
+    initTheme();
+    buildTabs();
+    attachEvents();
+    // Load from hash or default to first category
+    const initial = location.hash.replace('#','');
+    selectCategory(CATEGORIES[initial] ? initial : Object.keys(CATEGORIES)[0]);
+
+  </script>
+</body>
+</html>
